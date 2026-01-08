@@ -1,6 +1,6 @@
 export const config = { runtime: "nodejs" };
 
-const HF_MODEL = "https://router.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2";
+const HF_PREDICTIONS = "https://router.huggingface.co/api/predictions";
 
 export default async function handler(req, res) {
   try {
@@ -15,7 +15,7 @@ Include a short code snippet
 End with Key Takeaways
 `;
 
-    const response = await fetch(HF_MODEL, {
+    const response = await fetch(HF_PREDICTIONS, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -33,11 +33,11 @@ End with Key Takeaways
     try { data = JSON.parse(text); }
     catch { return res.status(500).json({ success: false, rawText: text }); }
 
-    if (data?.generated_text) {
+    if (data?.status === "succeeded" && typeof data.output === "string") {
       return res.status(200).json({
         success: true,
-        generatedPreview: data.generated_text.substring(0, 500),
-        fullLength: data.generated_text.length
+        generatedPreview: data.output.substring(0, 500),
+        fullLength: data.output.length
       });
     }
 
