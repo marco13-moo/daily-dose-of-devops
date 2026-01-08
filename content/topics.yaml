@@ -1,5 +1,5 @@
-- Kubernetes Liveness vs Readiness Probes
-- Terraform State: What Can Go Wrong
-- GitHub Actions Secrets Best Practices
-- Blue-Green vs Canary Deployments
-- Why DevOps Pipelines Fail in Production
+topics:
+  - What is CI/CD and why it matters
+  - Kubernetes readiness vs liveness probes
+  - Terraform remote state explained
+  - GitHub Actions basics for DevOps
