@@ -25,12 +25,9 @@ Use markdown, include a short code snippet if relevant, and end with Key Takeawa
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "deepseek-ai/DeepSeek-V3.2",
+        model: "HuggingFaceTB/SmolLM3-3B",
         input: prompt,
-        parameters: {
-          max_new_tokens: 400,
-          temperature: 0.7,
-        },
+        parameters: { max_new_tokens: 400, temperature: 0.7 },
       }),
     });
 
@@ -39,13 +36,10 @@ Use markdown, include a short code snippet if relevant, and end with Key Takeawa
     try {
       data = JSON.parse(text);
     } catch {
-      return res.status(500).json({
-        success: false,
-        rawText: text,
-      });
+      return res.status(500).json({ success: false, rawText: text });
     }
 
-    // Router returns { status, output } for predictions
+    // Check for successful prediction
     if (data?.status === "succeeded" && typeof data.output === "string") {
       return res.status(200).json({
         success: true,
@@ -59,6 +53,7 @@ Use markdown, include a short code snippet if relevant, and end with Key Takeawa
       message: "Model did not return text",
       rawResponse: data,
     });
+
   } catch (error) {
     console.error("Unhandled error:", error);
     return res.status(500).json({ success: false, error: error.message });
