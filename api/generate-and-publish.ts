@@ -4,7 +4,9 @@ export const config = {
 };
 
 // Hugging Face Router endpoint
-const HF_MODEL = "https://router.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2";
+const HF_MODEL =
+  "https://api-inference.huggingface.co/v1/models/mistralai/Mistral-7B-Instruct-v0.2:predict";
+
 
 export default async function handler(req, res) {
   try {
