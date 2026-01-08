@@ -4,7 +4,7 @@ export const config = {
 };
 
 const HF_MODEL =
-  "https://router.huggingface.co/api/models/mistralai/Mistral-7B-Instruct-v0.2";
+  "https://api-inference.huggingface.co/v1/models/mistralai/Mistral-7B-Instruct-v0.2:predict";
 
 export default async function handler(req, res) {
   try {
