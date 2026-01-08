@@ -8,13 +8,12 @@ const HF_MODEL = "https://router.huggingface.co/models/mistralai/Mistral-7B-Inst
 
 export default async function handler(req, res) {
   try {
-    // 1️⃣ Ensure API token exists
     const token = process.env.HUGGINGFACE_API_TOKEN;
     if (!token) {
       return res.status(500).json({ error: "HUGGINGFACE_API_TOKEN not set" });
     }
 
-    // 2️⃣ Build prompt
+    // Prompt
     const prompt = `
 You are a senior DevOps engineer and technical writer.
 
@@ -29,7 +28,7 @@ Rules:
 - End with a "Key Takeaways" section
 `;
 
-    // 3️⃣ Call Hugging Face Router
+    // Call Hugging Face Router
     const response = await fetch(HF_MODEL, {
       method: "POST",
       headers: {
@@ -45,17 +44,18 @@ Rules:
       }),
     });
 
-    // 4️⃣ Parse the JSON safely
+    // Parse safely
     let data;
+    const text = await response.text(); // always read as text first
+
     try {
-      data = await response.json();
+      data = JSON.parse(text); // parse once
     } catch (err) {
-      const text = await response.text(); // log raw response
-      console.error("Router response not JSON:", text);
+      console.error("Router response is not valid JSON:", text);
       return res.status(500).json({ success: false, rawText: text });
     }
 
-    // 5️⃣ Check for generated_text
+    // Check for generated text
     if (Array.isArray(data) && data[0]?.generated_text) {
       return res.status(200).json({
         success: true,
@@ -64,7 +64,7 @@ Rules:
       });
     }
 
-    // 6️⃣ If model is loading or error
+    // Model loading or error
     return res.status(500).json({
       success: false,
       message: "Hugging Face Router did not return generated text",
