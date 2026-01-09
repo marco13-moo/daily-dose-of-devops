@@ -1,12 +1,9 @@
-export const config = { runtime: "nodejs" };
-
 const HF_ENDPOINT = "https://router.huggingface.co/v1/chat/completions";
 const HASHNODE_GQL = "https://gql.hashnode.com";
 
 /* ---------------------------
-   Core: Generate Blog
+   Generate Blog
 ---------------------------- */
-
 async function generateBlog(): Promise<string> {
   const token = process.env.HUGGINGFACE_API_TOKEN;
   if (!token) throw new Error("HUGGINGFACE_API_TOKEN not set");
@@ -38,33 +35,30 @@ and end with Key Takeaways.
 
   const data = await response.json();
   const output = data?.choices?.[0]?.message?.content;
-
-  if (!output) {
-    console.error(JSON.stringify(data, null, 2));
-    throw new Error("Hugging Face returned no content");
-  }
+  if (!output) throw new Error("Hugging Face returned no content");
 
   return output;
 }
 
 /* ---------------------------
-   Core: Publish to Hashnode (CI Only)
+   Publish to Hashnode
 ---------------------------- */
-
 async function publishToHashnode(markdown: string): Promise<string> {
   const token = process.env.HASHNODE_API_TOKEN;
   const publicationId = process.env.HASHNODE_PUBLICATION_ID;
-
   if (!token || !publicationId) throw new Error("Hashnode secrets not set");
 
   const response = await fetch(HASHNODE_GQL, {
     method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
     body: JSON.stringify({
       query: `
         mutation PublishPost($input: PublishPostInput!) {
           publishPost(input: $input) {
-            post { id title url }
+            post { url }
           }
         }
       `,
@@ -85,62 +79,25 @@ async function publishToHashnode(markdown: string): Promise<string> {
 
   const result = await response.json();
   const url = result?.data?.publishPost?.post?.url;
-  if (!url) {
-    console.error(JSON.stringify(result, null, 2));
-    throw new Error("Failed to publish to Hashnode");
-  }
+  if (!url) throw new Error("Failed to publish to Hashnode");
 
   return url;
 }
 
 /* ---------------------------
-   Orchestrator
+   Main
 ---------------------------- */
-
-async function generateAndPublish() {
+async function main() {
   console.log("📝 Generating blog...");
   const markdown = await generateBlog();
 
-  if (process.env.GITHUB_ACTIONS === "true") {
-    console.log("🚀 Publishing to Hashnode...");
-    const url = await publishToHashnode(markdown);
-    return { markdown, url };
-  }
+  console.log("🚀 Publishing to Hashnode...");
+  const url = await publishToHashnode(markdown);
 
-  return { markdown }; // Vercel: generation only
+  console.log("✅ Published:", url);
 }
 
-/* ---------------------------
-   Vercel API Handler
----------------------------- */
-
-export default async function handler(req, res) {
-  try {
-    const result = await generateAndPublish();
-    return res.status(200).json({
-      success: true,
-      preview: result.markdown.substring(0, 500),
-      published: Boolean(result.url),
-      url: result.url ?? null,
-    });
-  } catch (error: any) {
-    console.error(error);
-    return res.status(500).json({ success: false, error: error.message });
-  }
-}
-
-/* ---------------------------
-   GitHub Actions Entrypoint
----------------------------- */
-
-if (process.env.GITHUB_ACTIONS === "true") {
-  generateAndPublish()
-    .then((res) => {
-      console.log("✅ Blog published:", res.url);
-      process.exit(0);
-    })
-    .catch((err) => {
-      console.error("❌ Pipeline failed:", err);
-      process.exit(1);
-    });
-}
+main().catch((err) => {
+  console.error("❌ Failed:", err);
+  process.exit(1);
+});
