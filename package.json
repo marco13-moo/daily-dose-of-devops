@@ -1,8 +1,11 @@
 {
-  "name": "daily-dose-of-devops",
-  "private": true,
   "type": "module",
-  "engines": {
-    "node": ">=18"
+  "devDependencies": {
+    "ts-node": "^11.18.1",
+    "typescript": "^5.2.0",
+    "@types/node": "^20.5.1"
+  },
+  "scripts": {
+    "daily": "ts-node-esm api/generate-and-publish.ts"
   }
 }
