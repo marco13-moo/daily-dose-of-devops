@@ -3,9 +3,9 @@ export const config = { runtime: "nodejs" };
 const HF_ENDPOINT = "https://router.huggingface.co/v1/chat/completions";
 const HASHNODE_GQL = "https://gql.hashnode.com";
 
-/* ---------------------------
-   Core Logic (shared)
----------------------------- */
+/* -------------------------------------------------
+   Core: Generate Blog (SAFE for Vercel & CI)
+-------------------------------------------------- */
 
 async function generateBlog(): Promise<string> {
   const token = process.env.HUGGINGFACE_API_TOKEN;
@@ -31,7 +31,8 @@ async function generateBlog(): Promise<string> {
           content: `
 Write a short DevOps blog post for "Daily Dose of DevOps".
 Topic: CI/CD fundamentals.
-Use markdown, include a short code snippet if relevant, and end with Key Takeaways.
+Use markdown, include a short code snippet if relevant,
+and end with Key Takeaways.
 `,
         },
       ],
@@ -44,13 +45,18 @@ Use markdown, include a short code snippet if relevant, and end with Key Takeawa
   const output = data?.choices?.[0]?.message?.content;
 
   if (!output) {
+    console.error(JSON.stringify(data, null, 2));
     throw new Error("Hugging Face returned no content");
   }
 
   return output;
 }
 
-async function publishToHashnode(markdown: string) {
+/* -------------------------------------------------
+   Core: Publish to Hashnode (CI ONLY)
+-------------------------------------------------- */
+
+async function publishToHashnode(markdown: string): Promise<string> {
   const token = process.env.HASHNODE_API_TOKEN;
   const publicationId = process.env.HASHNODE_PUBLICATION_ID;
 
@@ -85,15 +91,15 @@ async function publishToHashnode(markdown: string) {
             { name: "DevOps", slug: "devops" },
             { name: "CI/CD", slug: "cicd" },
             { name: "Automation", slug: "automation" }
-          ],
-        },
-      },
+          ]
+        }
+      }
     }),
   });
 
   const result = await response.json();
-
   const url = result?.data?.publishPost?.post?.url;
+
   if (!url) {
     console.error(JSON.stringify(result, null, 2));
     throw new Error("Failed to publish to Hashnode");
@@ -102,31 +108,39 @@ async function publishToHashnode(markdown: string) {
   return url;
 }
 
-/* ---------------------------
-   Combined Workflow
----------------------------- */
+/* -------------------------------------------------
+   Orchestrator
+-------------------------------------------------- */
 
 async function generateAndPublish() {
-  console.log("Generating blog...");
+  console.log("📝 Generating blog...");
   const markdown = await generateBlog();
 
-  console.log("Publishing to Hashnode...");
-  const url = await publishToHashnode(markdown);
+  // IMPORTANT:
+  // Only publish when running inside GitHub Actions
+  if (process.env.GITHUB_ACTIONS === "true") {
+    console.log("🚀 Publishing to Hashnode...");
+    const url = await publishToHashnode(markdown);
+    return { markdown, url };
+  }
 
-  return { markdown, url };
+  // Vercel: generation only
+  return { markdown };
 }
 
-/* ---------------------------
-   Vercel API Handler
----------------------------- */
+/* -------------------------------------------------
+   Vercel API Handler (SAFE)
+-------------------------------------------------- */
 
 export default async function handler(req, res) {
   try {
-    const { markdown, url } = await generateAndPublish();
+    const result = await generateAndPublish();
+
     return res.status(200).json({
       success: true,
-      preview: markdown.substring(0, 500),
-      url,
+      preview: result.markdown.substring(0, 500),
+      published: Boolean(result.url),
+      url: result.url ?? null,
     });
   } catch (error: any) {
     console.error(error);
@@ -137,18 +151,18 @@ export default async function handler(req, res) {
   }
 }
 
-/* ---------------------------
+/* -------------------------------------------------
    GitHub Actions Entrypoint
----------------------------- */
+-------------------------------------------------- */
 
 if (process.env.GITHUB_ACTIONS === "true") {
   generateAndPublish()
     .then((result) => {
-      console.log("✅ Published:", result.url);
+      console.log("✅ Blog published:", result.url);
       process.exit(0);
     })
     .catch((err) => {
-      console.error("❌ Failed:", err);
+      console.error("❌ Pipeline failed:", err);
       process.exit(1);
     });
 }
