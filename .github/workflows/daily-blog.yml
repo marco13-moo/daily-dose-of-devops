@@ -20,7 +20,10 @@ jobs:
         run: npm install
 
       - name: Build TypeScript
-        run: npm run build
+        run: |
+          npm run build
+          echo "=== dist tree ==="
+          ls -R dist
 
       - name: Generate and publish blog
         env:
