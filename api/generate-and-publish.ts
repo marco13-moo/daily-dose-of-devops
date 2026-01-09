@@ -3,15 +3,13 @@ export const config = { runtime: "nodejs" };
 const HF_ENDPOINT = "https://router.huggingface.co/v1/chat/completions";
 const HASHNODE_GQL = "https://gql.hashnode.com";
 
-/* -------------------------------------------------
-   Core: Generate Blog (SAFE for Vercel & CI)
--------------------------------------------------- */
+/* ---------------------------
+   Core: Generate Blog
+---------------------------- */
 
 async function generateBlog(): Promise<string> {
   const token = process.env.HUGGINGFACE_API_TOKEN;
-  if (!token) {
-    throw new Error("HUGGINGFACE_API_TOKEN not set");
-  }
+  if (!token) throw new Error("HUGGINGFACE_API_TOKEN not set");
 
   const response = await fetch(HF_ENDPOINT, {
     method: "POST",
@@ -22,10 +20,7 @@ async function generateBlog(): Promise<string> {
     body: JSON.stringify({
       model: "HuggingFaceTB/SmolLM3-3B",
       messages: [
-        {
-          role: "system",
-          content: "You are a senior DevOps engineer and technical writer.",
-        },
+        { role: "system", content: "You are a senior DevOps engineer and technical writer." },
         {
           role: "user",
           content: `
@@ -52,33 +47,24 @@ and end with Key Takeaways.
   return output;
 }
 
-/* -------------------------------------------------
-   Core: Publish to Hashnode (CI ONLY)
--------------------------------------------------- */
+/* ---------------------------
+   Core: Publish to Hashnode (CI Only)
+---------------------------- */
 
 async function publishToHashnode(markdown: string): Promise<string> {
   const token = process.env.HASHNODE_API_TOKEN;
   const publicationId = process.env.HASHNODE_PUBLICATION_ID;
 
-  if (!token || !publicationId) {
-    throw new Error("Hashnode secrets not set");
-  }
+  if (!token || !publicationId) throw new Error("Hashnode secrets not set");
 
   const response = await fetch(HASHNODE_GQL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
     body: JSON.stringify({
       query: `
         mutation PublishPost($input: PublishPostInput!) {
           publishPost(input: $input) {
-            post {
-              id
-              title
-              url
-            }
+            post { id title url }
           }
         }
       `,
@@ -90,16 +76,15 @@ async function publishToHashnode(markdown: string): Promise<string> {
           tags: [
             { name: "DevOps", slug: "devops" },
             { name: "CI/CD", slug: "cicd" },
-            { name: "Automation", slug: "automation" }
-          ]
-        }
-      }
+            { name: "Automation", slug: "automation" },
+          ],
+        },
+      },
     }),
   });
 
   const result = await response.json();
   const url = result?.data?.publishPost?.post?.url;
-
   if (!url) {
     console.error(JSON.stringify(result, null, 2));
     throw new Error("Failed to publish to Hashnode");
@@ -108,34 +93,30 @@ async function publishToHashnode(markdown: string): Promise<string> {
   return url;
 }
 
-/* -------------------------------------------------
+/* ---------------------------
    Orchestrator
--------------------------------------------------- */
+---------------------------- */
 
 async function generateAndPublish() {
   console.log("📝 Generating blog...");
   const markdown = await generateBlog();
 
-  // IMPORTANT:
-  // Only publish when running inside GitHub Actions
   if (process.env.GITHUB_ACTIONS === "true") {
     console.log("🚀 Publishing to Hashnode...");
     const url = await publishToHashnode(markdown);
     return { markdown, url };
   }
 
-  // Vercel: generation only
-  return { markdown };
+  return { markdown }; // Vercel: generation only
 }
 
-/* -------------------------------------------------
-   Vercel API Handler (SAFE)
--------------------------------------------------- */
+/* ---------------------------
+   Vercel API Handler
+---------------------------- */
 
 export default async function handler(req, res) {
   try {
     const result = await generateAndPublish();
-
     return res.status(200).json({
       success: true,
       preview: result.markdown.substring(0, 500),
@@ -144,21 +125,18 @@ export default async function handler(req, res) {
     });
   } catch (error: any) {
     console.error(error);
-    return res.status(500).json({
-      success: false,
-      error: error.message,
-    });
+    return res.status(500).json({ success: false, error: error.message });
   }
 }
 
-/* -------------------------------------------------
+/* ---------------------------
    GitHub Actions Entrypoint
--------------------------------------------------- */
+---------------------------- */
 
 if (process.env.GITHUB_ACTIONS === "true") {
   generateAndPublish()
-    .then((result) => {
-      console.log("✅ Blog published:", result.url);
+    .then((res) => {
+      console.log("✅ Blog published:", res.url);
       process.exit(0);
     })
     .catch((err) => {
