@@ -1,8 +1,6 @@
-// Force Node.js runtime
 export const config = { runtime: "nodejs" };
 
-// Router predictions endpoint
-const HF_PREDICTIONS = "https://router.huggingface.co/api/predictions";
+const HF_ENDPOINT = "https://router.huggingface.co/v1/chat/completions";
 
 export default async function handler(req, res) {
   try {
@@ -11,14 +9,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "HUGGINGFACE_API_TOKEN not set" });
     }
 
-    const prompt = `
-You are a senior DevOps engineer and technical writer.
-Write a short DevOps blog post for "Daily Dose of DevOps".
-Topic: CI/CD fundamentals.
-Use markdown, include a short code snippet if relevant, and end with Key Takeaways.
-`;
-
-    const response = await fetch(HF_PREDICTIONS, {
+    const response = await fetch(HF_ENDPOINT, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -26,36 +17,49 @@ Use markdown, include a short code snippet if relevant, and end with Key Takeawa
       },
       body: JSON.stringify({
         model: "HuggingFaceTB/SmolLM3-3B",
-        input: prompt,
-        parameters: { max_new_tokens: 400, temperature: 0.7 },
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a senior DevOps engineer and technical writer.",
+          },
+          {
+            role: "user",
+            content: `
+Write a short DevOps blog post for "Daily Dose of DevOps".
+Topic: CI/CD fundamentals.
+Use markdown, include a short code snippet if relevant, and end with Key Takeaways.
+`,
+          },
+        ],
+        max_tokens: 400,
+        temperature: 0.7,
       }),
     });
 
-    const text = await response.text();
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch {
-      return res.status(500).json({ success: false, rawText: text });
-    }
+    const data = await response.json();
 
-    // Check for successful prediction
-    if (data?.status === "succeeded" && typeof data.output === "string") {
-      return res.status(200).json({
-        success: true,
-        generatedPreview: data.output.substring(0, 500),
-        fullText: data.output,
+    const output =
+      data?.choices?.[0]?.message?.content;
+
+    if (!output) {
+      return res.status(500).json({
+        success: false,
+        message: "No text returned",
+        rawResponse: data,
       });
     }
 
-    return res.status(500).json({
-      success: false,
-      message: "Model did not return text",
-      rawResponse: data,
+    return res.status(200).json({
+      success: true,
+      generatedPreview: output.substring(0, 500),
+      fullText: output,
     });
-
   } catch (error) {
     console.error("Unhandled error:", error);
-    return res.status(500).json({ success: false, error: error.message });
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
   }
 }
