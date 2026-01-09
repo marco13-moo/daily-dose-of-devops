@@ -1,0 +1,34 @@
+name: Daily Dose of DevOps
+
+# Triggers
+on:
+  # Cron schedule (daily at 07:00 UTC)
+  schedule:
+    - cron: "0 7 * * *"
+  # Manual trigger
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repo
+      - uses: actions/checkout@v4
+
+      # Setup Node.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Install dependencies (if any)
+      - name: Install dependencies
+        run: npm install
+
+      # Run your generate-and-publish.ts file
+      - name: Generate and publish blog
+        env:
+          HUGGINGFACE_API_TOKEN: ${{ secrets.HUGGINGFACE_API_TOKEN }}
+          HASHNODE_API_TOKEN: ${{ secrets.HASHNODE_API_TOKEN }}
+          HASHNODE_PUBLICATION_ID: ${{ secrets.HASHNODE_PUBLICATION_ID }}
+        run: node api/generate-and-publish.ts
