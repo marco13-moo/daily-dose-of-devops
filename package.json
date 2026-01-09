@@ -1,11 +1,11 @@
 {
   "type": "module",
-  "devDependencies": {
-    "ts-node": "^11.18.1",
-    "typescript": "^5.2.0",
-    "@types/node": "^20.5.1"
-  },
   "scripts": {
-    "daily": "ts-node-esm api/generate-and-publish.ts"
+    "build": "tsc",
+    "daily": "node dist/api/generate-and-publish.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/node": "^20.11.5"
   }
 }
