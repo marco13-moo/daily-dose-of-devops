@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --pretty false",
     "daily": "node dist/api/generate-and-publish.js"
   },
   "devDependencies": {
