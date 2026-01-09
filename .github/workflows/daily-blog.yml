@@ -1,11 +1,10 @@
 name: Daily Dose of DevOps
 
-# Triggers
 on:
-  # Cron schedule (daily at 07:00 UTC)
+  # Run every day at 07:00 UTC
   schedule:
     - cron: "0 7 * * *"
-  # Manual trigger
+  # Allow manual trigger
   workflow_dispatch:
 
 jobs:
@@ -13,22 +12,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repo
+      # 1️⃣ Checkout the repo
       - uses: actions/checkout@v4
 
-      # Setup Node.js
+      # 2️⃣ Setup Node.js
       - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      # Install dependencies (if any)
+      # 3️⃣ Install dependencies including ts-node
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm install
+          npm install ts-node typescript @types/node --save-dev
 
-      # Run your generate-and-publish.ts file
+      # 4️⃣ Generate and publish blog
       - name: Generate and publish blog
         env:
           HUGGINGFACE_API_TOKEN: ${{ secrets.HUGGINGFACE_API_TOKEN }}
           HASHNODE_API_TOKEN: ${{ secrets.HASHNODE_API_TOKEN }}
           HASHNODE_PUBLICATION_ID: ${{ secrets.HASHNODE_PUBLICATION_ID }}
-        run: node api/generate-and-publish.ts
+        run: npx ts-node api/generate-and-publish.ts
