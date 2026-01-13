@@ -39,4 +39,5 @@ export function markTopicPublished(topic: string) {
     PUBLISHED_FILE,
     JSON.stringify(published, null, 2)
   );
+  console.log("Marking published:", topic);
 }

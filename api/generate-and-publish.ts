@@ -1,6 +1,7 @@
-import { getNextTopic } from "./topic-rotator.js";
+import { getNextTopic, markTopicPublished } from "./topic-rotator.js";
 const HF_ENDPOINT = "https://router.huggingface.co/v1/chat/completions";
 const HASHNODE_GQL = "https://gql.hashnode.com";
+markTopicPublished("test");
 
 /* ---------------------------
    Generate Blog
