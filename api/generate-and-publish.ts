@@ -1,6 +1,11 @@
 import { getNextTopic, markTopicPublished } from "./topic-rotator.js";
 const HF_ENDPOINT = "https://router.huggingface.co/v1/chat/completions";
 const HASHNODE_GQL = "https://gql.hashnode.com";
+const topic = getNextTopic();          // 🔁 rotated
+const markdown = await generateBlog(topic); // ✍️ content matches topic
+const url = await publishToHashnode(markdown, topic); // 📰 title matches topic
+markTopicPublished(topic);             // 💾 persisted
+
 markTopicPublished("test");
 
 /* ---------------------------
@@ -45,7 +50,7 @@ and end with Key Takeaways.
 /* ---------------------------
    Publish to Hashnode
 ---------------------------- */
-async function publishToHashnode(markdown: string): Promise<string> {
+async function publishToHashnode(markdown: string,topic: string): Promise<string> {
   const token = process.env.HASHNODE_API_TOKEN;
   const publicationId = process.env.HASHNODE_PUBLICATION_ID;
   if (!token || !publicationId) throw new Error("Hashnode secrets not set");
@@ -66,7 +71,7 @@ async function publishToHashnode(markdown: string): Promise<string> {
       `,
       variables: {
         input: {
-          title: "Daily Dose of DevOps — CI/CD Fundamentals",
+          title: `Daily Dose of DevOps — ${topic}`,
           contentMarkdown: markdown,
           publicationId,
           tags: [
@@ -95,7 +100,7 @@ async function main() {
 
   const markdown = await generateBlog(topic);
 
-  const url = await publishToHashnode(markdown);
+  const url = await publishToHashnode(markdown, topic);
 
   markTopicPublished(topic);
 
