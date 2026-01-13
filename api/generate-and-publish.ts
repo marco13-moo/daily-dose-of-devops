@@ -1,10 +1,11 @@
+import { getNextTopic, markTopicPublished } from "./topic-rotator";
 const HF_ENDPOINT = "https://router.huggingface.co/v1/chat/completions";
 const HASHNODE_GQL = "https://gql.hashnode.com";
 
 /* ---------------------------
    Generate Blog
 ---------------------------- */
-async function generateBlog(): Promise<string> {
+async function generateBlog(topic: string): Promise<string> {
   const token = process.env.HUGGINGFACE_API_TOKEN;
   if (!token) throw new Error("HUGGINGFACE_API_TOKEN not set");
 
@@ -22,7 +23,7 @@ async function generateBlog(): Promise<string> {
           role: "user",
           content: `
 Write a short DevOps blog post for "Daily Dose of DevOps".
-Topic: CI/CD fundamentals.
+Topic: ${topic}
 Use markdown, include a short code snippet if relevant,
 and end with Key Takeaways.
 `,
@@ -88,14 +89,18 @@ async function publishToHashnode(markdown: string): Promise<string> {
    Main
 ---------------------------- */
 async function main() {
-  console.log("📝 Generating blog...");
-  const markdown = await generateBlog();
+  const topic = getNextTopic();
+  console.log("🧠 Selected topic:", topic);
 
-  console.log("🚀 Publishing to Hashnode...");
+  const markdown = await generateBlog(topic);
+
   const url = await publishToHashnode(markdown);
+
+  markTopicPublished(topic);
 
   console.log("✅ Published:", url);
 }
+
 
 main().catch((err) => {
   console.error("❌ Failed:", err);

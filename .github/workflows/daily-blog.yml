@@ -31,3 +31,12 @@ jobs:
           HASHNODE_API_TOKEN: ${{ secrets.HASHNODE_API_TOKEN }}
           HASHNODE_PUBLICATION_ID: ${{ secrets.HASHNODE_PUBLICATION_ID }}
         run: npm run daily
+
+      - name: Commit published topic
+        run: |
+          git config user.name "devops-bot"
+          git config user.email "bot@github.com"
+          git add content/published.json
+          git commit -m "chore: mark blog topic as published" || echo "No changes"
+          git push
+

@@ -5,7 +5,10 @@
     "daily": "node dist/api/generate-and-publish.js"
   },
   "devDependencies": {
-    "typescript": "^5.3.3",
-    "@types/node": "^20.11.5"
+    "@types/node": "^20.11.5",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.1"
   }
 }
