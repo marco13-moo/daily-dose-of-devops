@@ -15,37 +15,64 @@ async function generateBlog(topic: string): Promise<string> {
   const token = process.env.HUGGINGFACE_API_TOKEN;
   if (!token) throw new Error("HUGGINGFACE_API_TOKEN not set");
 
-  const response = await fetch(HF_ENDPOINT, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "HuggingFaceTB/SmolLM3-3B",
-      messages: [
-        { role: "system", content: "You are a senior DevOps engineer and technical writer." },
-        {
-          role: "user",
-          content: `
+  let response;
+  try {
+    response = await fetch(HF_ENDPOINT, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "HuggingFaceTB/SmolLM3-3B",
+        messages: [
+          { role: "system", content: "You are a senior DevOps engineer and technical writer." },
+          {
+            role: "user",
+            content: `
 Write a short DevOps blog post for "Daily Dose of DevOps".
 Topic: ${topic}
 Use markdown, include a short code snippet if relevant,
 and end with Key Takeaways.
+Finish the article completely. Do not stop mid-sentence.
 `,
-        },
-      ],
-      max_tokens: 1200,
-      temperature: 0.7,
-    }),
-  });
+          },
+        ],
+        max_tokens: 1200,
+        temperature: 0.7,
+      }),
+    });
+  } catch (err) {
+    throw new Error(`Failed to reach Hugging Face endpoint: ${(err as Error).message}`);
+  }
 
-  const data = await response.json();
+  if (!response.ok) {
+    const text = await response.text().catch(() => "");
+    throw new Error(`Hugging Face API returned HTTP ${response.status}: ${text}`);
+  }
+
+  let data;
+  try {
+    data = await response.json();
+  } catch (err) {
+    throw new Error("Failed to parse Hugging Face response as JSON");
+  }
+
   const output = data?.choices?.[0]?.message?.content;
-  if (!output) throw new Error("Hugging Face returned no content");
+  if (!output || !output.trim()) {
+    throw new Error("Hugging Face returned empty content");
+  }
+
+  // -------------------
+  // Truncation / completeness check
+  // -------------------
+  if (!output.includes("## Key Takeaways")) {
+    throw new Error("Generated blog appears truncated (missing 'Key Takeaways')");
+  }
 
   return output;
 }
+
 
 /* ---------------------------
    Publish to Hashnode
