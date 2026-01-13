@@ -38,7 +38,7 @@ Finish the article completely. Do not stop mid-sentence.
 `,
           },
         ],
-        max_tokens: 1200,
+        max_tokens: 1600,
         temperature: 0.7,
       }),
     });
