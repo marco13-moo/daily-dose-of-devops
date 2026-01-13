@@ -35,7 +35,7 @@ and end with Key Takeaways.
 `,
         },
       ],
-      max_tokens: 400,
+      max_tokens: 1200,
       temperature: 0.7,
     }),
   });
