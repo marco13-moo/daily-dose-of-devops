@@ -6,7 +6,7 @@ const markdown = await generateBlog(topic); // ✍️ content matches topic
 const url = await publishToHashnode(markdown, topic); // 📰 title matches topic
 markTopicPublished(topic);             // 💾 persisted
 
-markTopicPublished("test");
+//markTopicPublished("test");
 
 /* ---------------------------
    Generate Blog
