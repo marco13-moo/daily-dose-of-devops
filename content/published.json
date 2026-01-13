@@ -3,6 +3,9 @@
     "test",
     "What is CI/CD and why it matters",
     "test",
-    "Kubernetes readiness vs liveness probes"
+    "Kubernetes readiness vs liveness probes",
+    "Terraform remote state explained",
+    "test",
+    "GitHub Actions basics for DevOps"
   ]
 }
