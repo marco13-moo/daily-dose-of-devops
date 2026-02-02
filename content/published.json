@@ -1,6 +1,8 @@
 {
   "published": [
     "What is CI/CD and why it matters",
-    "Kubernetes readiness vs liveness probes"
+    "Kubernetes readiness vs liveness probes",
+    "Terraform remote state explained",
+    "GitHub Actions basics for DevOps"
   ]
 }
