@@ -40,6 +40,6 @@ jobs:
         run: |
           git config user.name "devops-bot"
           git config user.email "bot@github.com"
-          git add content/published.json
+          git add content/published.json content/generated/
           git commit -m "chore: mark blog topic as published" || echo "No changes"
           git push

@@ -1,4 +1,6 @@
 import { getNextTopic, markTopicPublished } from "./topic-rotator.js";
+import { mkdir, writeFile } from "node:fs/promises";
+import path from "node:path";
 const HF_ENDPOINT = "https://router.huggingface.co/v1/chat/completions";
 const HASHNODE_GQL = "https://gql.hashnode.com";
 const DEFAULT_HF_MODEL = "Qwen/Qwen2.5-7B-Instruct";
@@ -108,11 +110,45 @@ async function publishToHashnode(markdown: string,topic: string): Promise<string
     }),
   });
 
-  const result = await response.json();
+  const responseBody = await response.text();
+  if (!response.ok) {
+    throw new Error(
+      `Hashnode API returned HTTP ${response.status}: ${responseBody.slice(0, 500)}`,
+    );
+  }
+
+  let result;
+  try {
+    result = JSON.parse(responseBody);
+  } catch {
+    throw new Error(
+      `Hashnode returned a non-JSON response: ${responseBody.slice(0, 500)}`,
+    );
+  }
+
+  if (result?.errors?.length) {
+    throw new Error(`Hashnode API error: ${JSON.stringify(result.errors)}`);
+  }
+
   const url = result?.data?.publishPost?.post?.url;
   if (!url) throw new Error("Failed to publish to Hashnode");
 
   return url;
+}
+
+async function saveLocalPost(topic: string, markdown: string): Promise<string> {
+  const slug = topic
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+  const date = new Date().toISOString().slice(0, 10);
+  const outputDirectory = path.join("content", "generated");
+  const outputPath = path.join(outputDirectory, `${date}-${slug}.md`);
+
+  await mkdir(outputDirectory, { recursive: true });
+  await writeFile(outputPath, `# Daily Dose of DevOps — ${topic}\n\n${markdown}\n`);
+
+  return outputPath;
 }
 
 /* ---------------------------
@@ -123,12 +159,23 @@ async function main() {
   console.log("🧠 Selected topic:", topic);
 
   const markdown = await generateBlog(topic);
+  const localPost = await saveLocalPost(topic, markdown);
+  console.log("💾 Saved generated post:", localPost);
 
-  const url = await publishToHashnode(markdown, topic);
+  try {
+    const url = await publishToHashnode(markdown, topic);
+    console.log("✅ Published:", url);
+  } catch (err) {
+    if (process.env.HASHNODE_REQUIRED === "true") {
+      throw err;
+    }
+    console.warn(
+      "⚠️ Hashnode publishing unavailable; keeping the generated post in GitHub:",
+      (err as Error).message,
+    );
+  }
 
   markTopicPublished(topic);
-
-  console.log("✅ Published:", url);
 }
 
 

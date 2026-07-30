@@ -14,6 +14,8 @@ The system is powered by:
 
 - **Hugging Face**: AI model generates technical content.
 - **Hashnode**: Publishes blog posts automatically.
+- **GitHub fallback**: Saves generated Markdown under `content/generated/`
+  when Hashnode API access is unavailable.
 - **GitHub Actions**: Runs daily to automate the generation and publication workflow.
 - **Vercel**: Hosts a preview API endpoint for generated posts.
 - **TypeScript & Node.js**: Strongly-typed, maintainable, modern JS stack.
