@@ -1,10 +1,7 @@
 import { getNextTopic, markTopicPublished } from "./topic-rotator.js";
 const HF_ENDPOINT = "https://router.huggingface.co/v1/chat/completions";
 const HASHNODE_GQL = "https://gql.hashnode.com";
-const topic = getNextTopic();          // 🔁 rotated
-const markdown = await generateBlog(topic); // ✍️ content matches topic
-const url = await publishToHashnode(markdown, topic); // 📰 title matches topic
-markTopicPublished(topic);             // 💾 persisted
+const DEFAULT_HF_MODEL = "Qwen/Qwen2.5-7B-Instruct";
 
 //markTopicPublished("test");
 
@@ -24,7 +21,7 @@ async function generateBlog(topic: string): Promise<string> {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "HuggingFaceTB/SmolLM3-3B",
+        model: process.env.HUGGINGFACE_MODEL || DEFAULT_HF_MODEL,
         messages: [
           { role: "system", content: "You are a senior DevOps engineer and technical writer." },
           {

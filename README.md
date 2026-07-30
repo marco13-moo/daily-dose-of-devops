@@ -106,7 +106,7 @@ This project demonstrates:
 
 | Layer          | Technology / Tool                     |
 |----------------|--------------------------------------|
-| AI Generation  | Hugging Face (SmolLM3-3B)            |
+| AI Generation  | Hugging Face (Qwen2.5-7B-Instruct)    |
 | Blogging       | Hashnode API                          |
 | CI/CD          | GitHub Actions                        |
 | Preview API    | Vercel                                |
