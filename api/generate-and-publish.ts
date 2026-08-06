@@ -1,20 +1,32 @@
-import { getNextTopic, markTopicPublished } from "./topic-rotator.js";
+import { pathToFileURL } from "node:url";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { getFallbackPost } from "./private-fallback-posts.js";
+import { getNextTopic, markTopicPublished } from "./topic-rotator.js";
+
 const HF_ENDPOINT = "https://router.huggingface.co/v1/chat/completions";
 const HASHNODE_GQL = "https://gql.hashnode.com";
 const DEFAULT_HF_MODEL = "Qwen/Qwen2.5-7B-Instruct";
 
-//markTopicPublished("test");
+type ApiRequest = { method?: string };
+type ApiResponse = {
+  status(code: number): ApiResponse;
+  json(body: unknown): void;
+  setHeader(name: string, value: string): void;
+};
 
-/* ---------------------------
-   Generate Blog
----------------------------- */
-async function generateBlog(topic: string): Promise<string> {
+type PublishResult = {
+  fallback: boolean;
+  fallbackReason?: string;
+  topic: string;
+  url: string;
+};
+
+export async function generateBlog(topic: string): Promise<string> {
   const token = process.env.HUGGINGFACE_API_TOKEN;
   if (!token) throw new Error("HUGGINGFACE_API_TOKEN not set");
 
-  let response;
+  let response: Response;
   try {
     response = await fetch(HF_ENDPOINT, {
       method: "POST",
@@ -25,46 +37,35 @@ async function generateBlog(topic: string): Promise<string> {
       body: JSON.stringify({
         model: process.env.HUGGINGFACE_MODEL || DEFAULT_HF_MODEL,
         messages: [
-          { role: "system", content: "You are a senior DevOps engineer and technical writer." },
+          {
+            role: "system",
+            content:
+              "You are a principal DevOps researcher and technical writer. Be rigorous, precise, and operationally useful.",
+          },
           {
             role: "user",
-            content: `
-Write a short DevOps blog post for "Daily Dose of DevOps".
-Topic: ${topic}
-Use markdown, include a short code snippet if relevant,
-and end with Key Takeaways.
-Finish the article completely. Do not stop mid-sentence.
-`,
+            content: `Write an advanced DevOps article for \"Daily Dose of DevOps\".\nTopic: ${topic}\nUse Markdown, explain failure modes and trade-offs, include a technically correct example, and finish with a \"## Key Takeaways\" section. Complete the article without truncation.`,
           },
         ],
-        max_tokens: 1600,
-        temperature: 0.7,
+        max_tokens: 2200,
+        temperature: 0.55,
       }),
     });
-  } catch (err) {
-    throw new Error(`Failed to reach Hugging Face endpoint: ${(err as Error).message}`);
+  } catch (error) {
+    throw new Error(`Failed to reach Hugging Face endpoint: ${(error as Error).message}`);
   }
 
   if (!response.ok) {
-    const text = await response.text().catch(() => "");
-    throw new Error(`Hugging Face API returned HTTP ${response.status}: ${text}`);
+    const detail = (await response.text().catch(() => "")).slice(0, 500);
+    throw new Error(`Hugging Face API returned HTTP ${response.status}: ${detail}`);
   }
 
-  let data;
-  try {
-    data = await response.json();
-  } catch (err) {
+  const data = (await response.json().catch(() => {
     throw new Error("Failed to parse Hugging Face response as JSON");
-  }
+  })) as { choices?: Array<{ message?: { content?: string } }> };
+  const output = data.choices?.[0]?.message?.content?.trim();
 
-  const output = data?.choices?.[0]?.message?.content;
-  if (!output || !output.trim()) {
-    throw new Error("Hugging Face returned empty content");
-  }
-
-  // -------------------
-  // Truncation / completeness check
-  // -------------------
+  if (!output) throw new Error("Hugging Face returned empty content");
   if (!output.includes("## Key Takeaways")) {
     throw new Error("Generated blog appears truncated (missing 'Key Takeaways')");
   }
@@ -72,11 +73,7 @@ Finish the article completely. Do not stop mid-sentence.
   return output;
 }
 
-
-/* ---------------------------
-   Publish to Hashnode
----------------------------- */
-async function publishToHashnode(markdown: string,topic: string): Promise<string> {
+export async function publishToHashnode(markdown: string, topic: string): Promise<string> {
   const token = process.env.HASHNODE_API_TOKEN;
   const publicationId = process.env.HASHNODE_PUBLICATION_ID;
   if (!token || !publicationId) throw new Error("Hashnode secrets not set");
@@ -88,13 +85,9 @@ async function publishToHashnode(markdown: string,topic: string): Promise<string
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
-      query: `
-        mutation PublishPost($input: PublishPostInput!) {
-          publishPost(input: $input) {
-            post { url }
-          }
-        }
-      `,
+      query: `mutation PublishPost($input: PublishPostInput!) {
+        publishPost(input: $input) { post { url } }
+      }`,
       variables: {
         input: {
           title: `Daily Dose of DevOps — ${topic}`,
@@ -110,28 +103,16 @@ async function publishToHashnode(markdown: string,topic: string): Promise<string
     }),
   });
 
-  const responseBody = await response.text();
-  if (!response.ok) {
-    throw new Error(
-      `Hashnode API returned HTTP ${response.status}: ${responseBody.slice(0, 500)}`,
-    );
-  }
+  const result = (await response.json().catch(() => ({}))) as {
+    data?: { publishPost?: { post?: { url?: string } } };
+    errors?: Array<{ message?: string }>;
+  };
+  const url = result.data?.publishPost?.post?.url;
 
-  let result;
-  try {
-    result = JSON.parse(responseBody);
-  } catch {
-    throw new Error(
-      `Hashnode returned a non-JSON response: ${responseBody.slice(0, 500)}`,
-    );
+  if (!response.ok || !url) {
+    const reason = result.errors?.map((error) => error.message).filter(Boolean).join("; ");
+    throw new Error(`Hashnode publish failed (HTTP ${response.status})${reason ? `: ${reason}` : ""}`);
   }
-
-  if (result?.errors?.length) {
-    throw new Error(`Hashnode API error: ${JSON.stringify(result.errors)}`);
-  }
-
-  const url = result?.data?.publishPost?.post?.url;
-  if (!url) throw new Error("Failed to publish to Hashnode");
 
   return url;
 }
@@ -151,35 +132,72 @@ async function saveLocalPost(topic: string, markdown: string): Promise<string> {
   return outputPath;
 }
 
-/* ---------------------------
-   Main
----------------------------- */
-async function main() {
-  const topic = getNextTopic();
-  console.log("🧠 Selected topic:", topic);
+export async function generateAndPublish(topic = getNextTopic()): Promise<PublishResult> {
+  let markdown: string;
+  let fallback = false;
+  let fallbackReason: string | undefined;
 
-  const markdown = await generateBlog(topic);
+  try {
+    markdown = await generateBlog(topic);
+  } catch (error) {
+    fallback = true;
+    fallbackReason = (error as Error).message;
+    markdown = getFallbackPost(topic);
+    console.warn(`Generation unavailable; using private fallback post: ${fallbackReason}`);
+  }
+
+  const url = await publishToHashnode(markdown, topic);
+  return { fallback, fallbackReason, topic, url };
+}
+
+export default async function handler(req: ApiRequest, res: ApiResponse): Promise<void> {
+  res.setHeader("Cache-Control", "no-store");
+  if (req.method !== "GET" && req.method !== "POST") {
+    res.setHeader("Allow", "GET, POST");
+    res.status(405).json({ error: "Method not allowed" });
+    return;
+  }
+
+  try {
+    const result = await generateAndPublish();
+    res.status(200).json({ ok: true, ...result });
+  } catch (error) {
+    console.error("Publish failed:", error);
+    res.status(502).json({ ok: false, error: "Unable to publish the blog post" });
+  }
+}
+
+async function main(): Promise<void> {
+  const topic = getNextTopic();
+  console.log("Selected topic:", topic);
+  let markdown: string;
+  let fallback = false;
+  try {
+    markdown = await generateBlog(topic);
+  } catch (error) {
+    fallback = true;
+    markdown = getFallbackPost(topic);
+    console.warn("Generation unavailable; storing private fallback:", (error as Error).message);
+  }
+
   const localPost = await saveLocalPost(topic, markdown);
-  console.log("💾 Saved generated post:", localPost);
+  console.log("Saved post:", localPost);
 
   try {
     const url = await publishToHashnode(markdown, topic);
-    console.log("✅ Published:", url);
-  } catch (err) {
-    if (process.env.HASHNODE_REQUIRED === "true") {
-      throw err;
-    }
-    console.warn(
-      "⚠️ Hashnode publishing unavailable; keeping the generated post in GitHub:",
-      (err as Error).message,
-    );
+    console.log(fallback ? "Published private fallback:" : "Published generated post:", url);
+  } catch (error) {
+    if (process.env.HASHNODE_REQUIRED === "true") throw error;
+    console.warn("Hashnode unavailable; post retained in GitHub:", (error as Error).message);
   }
 
   markTopicPublished(topic);
 }
 
-
-main().catch((err) => {
-  console.error("❌ Failed:", err);
-  process.exit(1);
-});
+const isCli = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+if (isCli) {
+  main().catch((error) => {
+    console.error("Failed:", error);
+    process.exitCode = 1;
+  });
+}
