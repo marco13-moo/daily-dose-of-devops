@@ -22,6 +22,11 @@ type PublishResult = {
   url: string;
 };
 
+type HashnodeGraphqlResponse = {
+  data?: { publishPost?: { post?: { url?: string } } };
+  errors?: unknown;
+};
+
 export async function generateBlog(topic: string): Promise<string> {
   const token = process.env.HUGGINGFACE_API_TOKEN;
   if (!token) throw new Error("HUGGINGFACE_API_TOKEN not set");
@@ -82,6 +87,7 @@ export async function publishToHashnode(markdown: string, topic: string): Promis
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Accept: "application/json",
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
@@ -93,25 +99,28 @@ export async function publishToHashnode(markdown: string, topic: string): Promis
           title: `Daily Dose of DevOps — ${topic}`,
           contentMarkdown: markdown,
           publicationId,
-          tags: [
-            { name: "DevOps", slug: "devops" },
-            { name: "CI/CD", slug: "cicd" },
-            { name: "Automation", slug: "automation" },
-          ],
         },
       },
     }),
   });
 
-  const result = (await response.json().catch(() => ({}))) as {
-    data?: { publishPost?: { post?: { url?: string } } };
-    errors?: Array<{ message?: string }>;
-  };
+  const responseBody = await response.text();
+  let result: HashnodeGraphqlResponse;
+  try {
+    result = JSON.parse(responseBody) as HashnodeGraphqlResponse;
+  } catch {
+    throw new Error(
+      `Hashnode returned non-JSON (HTTP ${response.status}): ${responseBody.slice(0, 500)}`,
+    );
+  }
+
   const url = result.data?.publishPost?.post?.url;
 
   if (!response.ok || !url) {
-    const reason = result.errors?.map((error) => error.message).filter(Boolean).join("; ");
-    throw new Error(`Hashnode publish failed (HTTP ${response.status})${reason ? `: ${reason}` : ""}`);
+    const detail = result.errors
+      ? JSON.stringify(result.errors).slice(0, 1000)
+      : JSON.stringify(result).slice(0, 1000);
+    throw new Error(`Hashnode publish failed (HTTP ${response.status}): ${detail}`);
   }
 
   return url;
@@ -183,14 +192,8 @@ async function main(): Promise<void> {
   const localPost = await saveLocalPost(topic, markdown);
   console.log("Saved post:", localPost);
 
-  try {
-    const url = await publishToHashnode(markdown, topic);
-    console.log(fallback ? "Published private fallback:" : "Published generated post:", url);
-  } catch (error) {
-    if (process.env.HASHNODE_REQUIRED === "true") throw error;
-    console.warn("Hashnode unavailable; post retained in GitHub:", (error as Error).message);
-  }
-
+  const url = await publishToHashnode(markdown, topic);
+  console.log(fallback ? "Published private fallback:" : "Published generated post:", url);
   markTopicPublished(topic);
 }
 

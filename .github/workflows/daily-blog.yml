@@ -20,7 +20,7 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build TypeScript
         run: |
@@ -36,10 +36,11 @@ jobs:
           HASHNODE_PUBLICATION_ID: ${{ secrets.HASHNODE_PUBLICATION_ID }}
         run: npm run daily
 
-      - name: Commit published topic
+      - name: Preserve generated post and publication state
+        if: ${{ always() }}
         run: |
           git config user.name "devops-bot"
           git config user.email "bot@github.com"
           git add content/published.json content/generated/
-          git commit -m "chore: mark blog topic as published" || echo "No changes"
+          git diff --cached --quiet || git commit -m "chore: preserve daily blog output"
           git push
