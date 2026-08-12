@@ -2,7 +2,8 @@
   "type": "module",
   "scripts": {
     "build": "tsc --pretty false",
-    "daily": "node dist/api/generate-and-publish.js"
+    "daily": "node dist/api/generate-and-publish.js",
+    "migrate:hashnode": "node dist/scripts/migrate-hashnode-rss.js"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",

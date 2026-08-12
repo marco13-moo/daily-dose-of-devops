@@ -32,8 +32,7 @@ jobs:
         env:
           HUGGINGFACE_API_TOKEN: ${{ secrets.HUGGINGFACE_API_TOKEN }}
           HUGGINGFACE_MODEL: Qwen/Qwen2.5-7B-Instruct
-          HASHNODE_API_TOKEN: ${{ secrets.HASHNODE_API_TOKEN }}
-          HASHNODE_PUBLICATION_ID: ${{ secrets.HASHNODE_PUBLICATION_ID }}
+          DEV_API_KEY: ${{ secrets.DEV_API_KEY }}
         run: npm run daily
 
       - name: Preserve generated post and publication state

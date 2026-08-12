@@ -2,20 +2,19 @@
 
 ![Project Badge](https://img.shields.io/badge/status-production-green)
 
-**Automated DevOps Blog Generator | Hashnode + Hugging Face + GitHub Actions + Vercel**
+**Automated DevOps Blog Generator | DEV Community + Hugging Face + GitHub Actions + Vercel**
 
 ---
 
 ## 🚀 Project Overview
 
-**Daily Dose of DevOps** is a fully automated system that generates **daily DevOps-focused blog posts** using AI, publishes them to **Hashnode**, and tracks published topics to prevent duplicates. This project demonstrates real-world **DevOps engineering practices**, including CI/CD, GitOps, infrastructure-as-code thinking, and workflow automation.
+**Daily Dose of DevOps** generates advanced DevOps articles, publishes them to **DEV Community**, and retains the Markdown source in GitHub. GitHub remains the canonical archive so platform policy changes cannot strand the content.
 
 The system is powered by:
 
 - **Hugging Face**: AI model generates technical content.
-- **Hashnode**: Publishes blog posts automatically.
-- **GitHub fallback**: Saves generated Markdown under `content/generated/`
-  when Hashnode API access is unavailable.
+- **DEV Community**: Publishes Markdown articles through the Forem API.
+- **GitHub archive**: Saves every generated article under `content/generated/`.
 - **GitHub Actions**: Runs daily to automate the generation and publication workflow.
 - **Vercel**: Hosts a preview API endpoint for generated posts.
 - **TypeScript & Node.js**: Strongly-typed, maintainable, modern JS stack.
@@ -47,7 +46,7 @@ daily-dose-of-devops/
 
 2. **Daily Publication**
    - GitHub Actions triggers every day at 07:00 UTC.
-   - Posts automatically to your **Hashnode publication**.
+   - Posts automatically to your **DEV Community profile**.
 
 3. **Topic Rotation & Deduplication**
    - Pulls from a rotating list of topics in `topics.yaml`.
@@ -76,8 +75,7 @@ npm install
 Create a .env file or set GitHub repository secrets:
 
 HUGGINGFACE_API_TOKEN=<your_huggingface_token>
-HASHNODE_API_TOKEN=<your_hashnode_token>
-HASHNODE_PUBLICATION_ID=<your_publication_id>
+DEV_API_KEY=<your_dev_api_key>
 
 Build the project
 npm run build
@@ -86,7 +84,7 @@ npm run build
 
 1. **Pick a topic** from `topics.yaml` that hasn’t been published yet.
 2. **Generate content** via Hugging Face LLM.
-3. **Publish post** to Hashnode if running inside GitHub Actions.
+3. **Publish post** to DEV Community.
 4. **Update `published.json`** with topic, URL, and timestamp.
 5. **Commit & push** updates back to GitHub automatically.
 
@@ -109,7 +107,7 @@ This project demonstrates:
 | Layer          | Technology / Tool                     |
 |----------------|--------------------------------------|
 | AI Generation  | Hugging Face (Qwen2.5-7B-Instruct)    |
-| Blogging       | Hashnode API                          |
+| Blogging       | DEV Community / Forem API             |
 | CI/CD          | GitHub Actions                        |
 | Preview API    | Vercel                                |
 | Language       | TypeScript, Node.js                   |
@@ -119,3 +117,19 @@ This project demonstrates:
 
 - **Repo:** [GitHub](https://github.com/marco13-moo/daily-dose-of-devops)  
 - **Live API Preview:** `https://daily-dev-blog.vercel.app/api/generate-and-publish`
+
+## Migrating the Hashnode archive
+
+The migration reads the 20 complete articles still exposed by the public Hashnode RSS feed. It is idempotent and preserves each Hashnode URL as the DEV canonical URL.
+
+```bash
+npm run build
+
+# Safe preview: creates DEV drafts
+DEV_API_KEY=<your_key> npm run migrate:hashnode
+
+# Publish the imported archive
+DEV_API_KEY=<your_key> DEV_MIGRATION_PUBLISH=true npm run migrate:hashnode
+```
+
+Hashnode no longer exposes the older archive through its free API. Those posts require a Hashnode export or manual source files before they can be migrated.

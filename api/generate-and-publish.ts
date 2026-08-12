@@ -5,7 +5,7 @@ import { getFallbackPost } from "./private-fallback-posts.js";
 import { getNextTopic, markTopicPublished } from "./topic-rotator.js";
 
 const HF_ENDPOINT = "https://router.huggingface.co/v1/chat/completions";
-const HASHNODE_GQL = "https://gql.hashnode.com";
+const DEV_ARTICLES_ENDPOINT = "https://dev.to/api/articles";
 const DEFAULT_HF_MODEL = "Qwen/Qwen2.5-7B-Instruct";
 
 type ApiRequest = { method?: string };
@@ -20,11 +20,6 @@ type PublishResult = {
   fallbackReason?: string;
   topic: string;
   url: string;
-};
-
-type HashnodeGraphqlResponse = {
-  data?: { publishPost?: { post?: { url?: string } } };
-  errors?: unknown;
 };
 
 export async function generateBlog(topic: string): Promise<string> {
@@ -78,52 +73,42 @@ export async function generateBlog(topic: string): Promise<string> {
   return output;
 }
 
-export async function publishToHashnode(markdown: string, topic: string): Promise<string> {
-  const token = process.env.HASHNODE_API_TOKEN;
-  const publicationId = process.env.HASHNODE_PUBLICATION_ID;
-  if (!token || !publicationId) throw new Error("Hashnode secrets not set");
+export async function publishToDev(markdown: string, topic: string): Promise<string> {
+  const token = process.env.DEV_API_KEY;
+  if (!token) throw new Error("DEV_API_KEY not set");
 
-  const response = await fetch(HASHNODE_GQL, {
+  const response = await fetch(DEV_ARTICLES_ENDPOINT, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      Authorization: `Bearer ${token}`,
+      "api-key": token,
     },
     body: JSON.stringify({
-      query: `mutation PublishPost($input: PublishPostInput!) {
-        publishPost(input: $input) { post { url } }
-      }`,
-      variables: {
-        input: {
+      article: {
           title: `Daily Dose of DevOps — ${topic}`,
-          contentMarkdown: markdown,
-          publicationId,
-        },
+          body_markdown: markdown,
+          published: true,
+          tags: "devops, cicd, automation, cloud",
       },
     }),
   });
 
   const responseBody = await response.text();
-  let result: HashnodeGraphqlResponse;
+  let result: { url?: string; error?: string; status?: number };
   try {
-    result = JSON.parse(responseBody) as HashnodeGraphqlResponse;
+    result = JSON.parse(responseBody) as typeof result;
   } catch {
     throw new Error(
-      `Hashnode returned non-JSON (HTTP ${response.status}): ${responseBody.slice(0, 500)}`,
+      `DEV returned non-JSON (HTTP ${response.status}): ${responseBody.slice(0, 500)}`,
     );
   }
 
-  const url = result.data?.publishPost?.post?.url;
-
-  if (!response.ok || !url) {
-    const detail = result.errors
-      ? JSON.stringify(result.errors).slice(0, 1000)
-      : JSON.stringify(result).slice(0, 1000);
-    throw new Error(`Hashnode publish failed (HTTP ${response.status}): ${detail}`);
+  if (!response.ok || !result.url) {
+    throw new Error(`DEV publish failed (HTTP ${response.status}): ${JSON.stringify(result).slice(0, 1000)}`);
   }
 
-  return url;
+  return result.url;
 }
 
 async function saveLocalPost(topic: string, markdown: string): Promise<string> {
@@ -155,7 +140,7 @@ export async function generateAndPublish(topic = getNextTopic()): Promise<Publis
     console.warn(`Generation unavailable; using private fallback post: ${fallbackReason}`);
   }
 
-  const url = await publishToHashnode(markdown, topic);
+  const url = await publishToDev(markdown, topic);
   return { fallback, fallbackReason, topic, url };
 }
 
@@ -192,7 +177,7 @@ async function main(): Promise<void> {
   const localPost = await saveLocalPost(topic, markdown);
   console.log("Saved post:", localPost);
 
-  const url = await publishToHashnode(markdown, topic);
+  const url = await publishToDev(markdown, topic);
   console.log(fallback ? "Published private fallback:" : "Published generated post:", url);
   markTopicPublished(topic);
 }
