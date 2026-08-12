@@ -1,0 +1,36 @@
+name: Migrate Hashnode Archive to DEV
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish immediately instead of creating drafts
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build migration
+        run: npm run build
+
+      - name: Import archived Hashnode posts
+        env:
+          DEV_API_KEY: ${{ secrets.DEV_API_KEY }}
+          DEV_MIGRATION_PUBLISH: ${{ inputs.publish }}
+        run: npm run migrate:hashnode
