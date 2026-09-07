@@ -1,5 +1,6 @@
 {
   "published": [
-    "What is CI/CD and why it matters"
+    "What is CI/CD and why it matters",
+    "Kubernetes readiness vs liveness probes"
   ]
 }
