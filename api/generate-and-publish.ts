@@ -2,7 +2,7 @@ import { pathToFileURL } from "node:url";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { getFallbackPost } from "./private-fallback-posts.js";
-import { getNextTopic, markTopicPublished } from "./topic-rotator.js";
+import { getCurrentCategory, getNextTopicForNow, markTopicPublished } from "./topic-rotator.js";
 
 const HF_ENDPOINT = "https://router.huggingface.co/v1/chat/completions";
 const DEV_ARTICLES_ENDPOINT = "https://dev.to/api/articles";
@@ -40,11 +40,11 @@ export async function generateBlog(topic: string): Promise<string> {
           {
             role: "system",
             content:
-              "You are a principal DevOps researcher and technical writer. Be rigorous, precise, and operationally useful.",
+              "You are a senior platform engineer, SRE, and technical writer. Produce hard-edged, enterprise-level DevOps writing that is precise, actionable, and grounded in operational reality.",
           },
           {
             role: "user",
-            content: `Write an advanced DevOps article for \"Daily Dose of DevOps\".\nTopic: ${topic}\nUse Markdown, explain failure modes and trade-offs, include a technically correct example, and finish with a \"## Key Takeaways\" section. Complete the article without truncation.`,
+            content: `Write an opinionated, hard-edged enterprise DevOps and platform engineering article for experienced engineers and engineering leaders.\n\nTopic: ${topic}\n\nRequirements:\n- Lead with a concrete operational problem, trade-off, or failure mode.\n- Focus on enterprise realities: large teams, governance, reliability, security, and platform trade-offs.\n- Discuss anti-patterns, failure modes, and operational risk.\n- Use confident, technically precise prose.\n- Include a realistic configuration snippet or workflow example when useful.\n- Add sections for \"## Trade-offs\", \"## What teams get wrong\", and \"## Key Takeaways\".\n- Do not use fluff, generic summary language, or shallow advice.\n- Finish the article completely without truncation.`,
           },
         ],
         max_tokens: 2200,
@@ -126,7 +126,10 @@ async function saveLocalPost(topic: string, markdown: string): Promise<string> {
   return outputPath;
 }
 
-export async function generateAndPublish(topic = getNextTopic()): Promise<PublishResult> {
+export async function generateAndPublish(
+  topic = getNextTopicForNow(),
+  category = process.env.TOPIC_CATEGORY ?? getCurrentCategory(),
+): Promise<PublishResult> {
   let markdown: string;
   let fallback = false;
   let fallbackReason: string | undefined;
@@ -141,6 +144,7 @@ export async function generateAndPublish(topic = getNextTopic()): Promise<Publis
   }
 
   const url = await publishToDev(markdown, topic);
+  markTopicPublished(topic, category);
   return { fallback, fallbackReason, topic, url };
 }
 
@@ -162,7 +166,9 @@ export default async function handler(req: ApiRequest, res: ApiResponse): Promis
 }
 
 async function main(): Promise<void> {
-  const topic = getNextTopic();
+  const category = process.env.TOPIC_CATEGORY ?? getCurrentCategory();
+  const topic = getNextTopicForNow();
+  console.log("Selected category:", category);
   console.log("Selected topic:", topic);
   let markdown: string;
   let fallback = false;
@@ -179,7 +185,7 @@ async function main(): Promise<void> {
 
   const url = await publishToDev(markdown, topic);
   console.log(fallback ? "Published private fallback:" : "Published generated post:", url);
-  markTopicPublished(topic);
+  markTopicPublished(topic, category);
 }
 
 const isCli = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;

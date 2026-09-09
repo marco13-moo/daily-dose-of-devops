@@ -82,11 +82,12 @@ npm run build
 
 ## 📝 How it Works
 
-1. **Pick a topic** from `topics.yaml` that hasn’t been published yet.
-2. **Generate content** via Hugging Face LLM.
-3. **Publish post** to DEV Community.
-4. **Update `published.json`** with topic, URL, and timestamp.
-5. **Commit & push** updates back to GitHub automatically.
+1. **Pick a category** for the current week (platform engineering, Kubernetes, security, or observability).
+2. **Pick a topic** from the matching YAML file that hasn’t been published yet.
+3. **Generate content** via Hugging Face LLM.
+4. **Publish post** to DEV Community.
+5. **Update `published.json`** with the topic, its category, and publication metadata.
+6. **Commit & push** updates back to GitHub automatically.
 
 ---
 
