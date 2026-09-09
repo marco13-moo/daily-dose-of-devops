@@ -1,0 +1,301 @@
+topics:
+  - Platform engineering: for high-growth engineering teams
+  - Platform engineering: for enterprise software organizations
+  - Platform engineering: for regulated environments
+  - Platform engineering: for multi-team delivery
+  - Platform engineering: without slowing developer throughput
+  - Platform engineering: with secure guardrails
+  - Platform engineering: for cloud-native adoption
+  - Platform engineering: for hybrid infrastructure
+  - Platform engineering: for platform product teams
+  - Platform engineering: for legacy modernization programs
+  - Platform engineering: across dev, test, and production
+  - Platform engineering: for global engineering organizations
+  - Platform engineering: with strong compliance requirements
+  - Platform engineering: at scale
+  - Platform engineering: for platform reliability goals
+  - Platform engineering: for low-ops teams
+  - Platform engineering: for platform-led transformation
+  - Platform engineering: for app teams and platform teams
+  - Platform engineering: for distributed engineering organizations
+  - Platform engineering: for multi-account cloud estates
+  - Platform engineering: for service ownership models
+  - Platform engineering: in regulated industries
+  - Platform engineering: during digital transformation
+  - Platform engineering: with strong change governance
+  - Platform engineering: without creating platform sprawl
+  - Platform engineering: with strong SRE collaboration
+  - Platform engineering: with mature DevOps adoption
+  - Platform engineering: for secure self-service
+  - Platform engineering: for engineering leaders
+  - Platform engineering: for enterprise architecture teams
+  - Internal developer platform: for high-growth engineering teams
+  - Internal developer platform: for enterprise software organizations
+  - Internal developer platform: for regulated environments
+  - Internal developer platform: for multi-team delivery
+  - Internal developer platform: without slowing developer throughput
+  - Internal developer platform: with secure guardrails
+  - Internal developer platform: for cloud-native adoption
+  - Internal developer platform: for hybrid infrastructure
+  - Internal developer platform: for platform product teams
+  - Internal developer platform: for legacy modernization programs
+  - Internal developer platform: across dev, test, and production
+  - Internal developer platform: for global engineering organizations
+  - Internal developer platform: with strong compliance requirements
+  - Internal developer platform: at scale
+  - Internal developer platform: for platform reliability goals
+  - Internal developer platform: for low-ops teams
+  - Internal developer platform: for platform-led transformation
+  - Internal developer platform: for app teams and platform teams
+  - Internal developer platform: for distributed engineering organizations
+  - Internal developer platform: for multi-account cloud estates
+  - Internal developer platform: for service ownership models
+  - Internal developer platform: in regulated industries
+  - Internal developer platform: during digital transformation
+  - Internal developer platform: with strong change governance
+  - Internal developer platform: without creating platform sprawl
+  - Internal developer platform: with strong SRE collaboration
+  - Internal developer platform: with mature DevOps adoption
+  - Internal developer platform: for secure self-service
+  - Internal developer platform: for engineering leaders
+  - Internal developer platform: for enterprise architecture teams
+  - Golden path: for high-growth engineering teams
+  - Golden path: for enterprise software organizations
+  - Golden path: for regulated environments
+  - Golden path: for multi-team delivery
+  - Golden path: without slowing developer throughput
+  - Golden path: with secure guardrails
+  - Golden path: for cloud-native adoption
+  - Golden path: for hybrid infrastructure
+  - Golden path: for platform product teams
+  - Golden path: for legacy modernization programs
+  - Golden path: across dev, test, and production
+  - Golden path: for global engineering organizations
+  - Golden path: with strong compliance requirements
+  - Golden path: at scale
+  - Golden path: for platform reliability goals
+  - Golden path: for low-ops teams
+  - Golden path: for platform-led transformation
+  - Golden path: for app teams and platform teams
+  - Golden path: for distributed engineering organizations
+  - Golden path: for multi-account cloud estates
+  - Golden path: for service ownership models
+  - Golden path: in regulated industries
+  - Golden path: during digital transformation
+  - Golden path: with strong change governance
+  - Golden path: without creating platform sprawl
+  - Golden path: with strong SRE collaboration
+  - Golden path: with mature DevOps adoption
+  - Golden path: for secure self-service
+  - Golden path: for engineering leaders
+  - Golden path: for enterprise architecture teams
+  - Developer portal: for high-growth engineering teams
+  - Developer portal: for enterprise software organizations
+  - Developer portal: for regulated environments
+  - Developer portal: for multi-team delivery
+  - Developer portal: without slowing developer throughput
+  - Developer portal: with secure guardrails
+  - Developer portal: for cloud-native adoption
+  - Developer portal: for hybrid infrastructure
+  - Developer portal: for platform product teams
+  - Developer portal: for legacy modernization programs
+  - Developer portal: across dev, test, and production
+  - Developer portal: for global engineering organizations
+  - Developer portal: with strong compliance requirements
+  - Developer portal: at scale
+  - Developer portal: for platform reliability goals
+  - Developer portal: for low-ops teams
+  - Developer portal: for platform-led transformation
+  - Developer portal: for app teams and platform teams
+  - Developer portal: for distributed engineering organizations
+  - Developer portal: for multi-account cloud estates
+  - Developer portal: for service ownership models
+  - Developer portal: in regulated industries
+  - Developer portal: during digital transformation
+  - Developer portal: with strong change governance
+  - Developer portal: without creating platform sprawl
+  - Developer portal: with strong SRE collaboration
+  - Developer portal: with mature DevOps adoption
+  - Developer portal: for secure self-service
+  - Developer portal: for engineering leaders
+  - Developer portal: for enterprise architecture teams
+  - Self-service platform: for high-growth engineering teams
+  - Self-service platform: for enterprise software organizations
+  - Self-service platform: for regulated environments
+  - Self-service platform: for multi-team delivery
+  - Self-service platform: without slowing developer throughput
+  - Self-service platform: with secure guardrails
+  - Self-service platform: for cloud-native adoption
+  - Self-service platform: for hybrid infrastructure
+  - Self-service platform: for platform product teams
+  - Self-service platform: for legacy modernization programs
+  - Self-service platform: across dev, test, and production
+  - Self-service platform: for global engineering organizations
+  - Self-service platform: with strong compliance requirements
+  - Self-service platform: at scale
+  - Self-service platform: for platform reliability goals
+  - Self-service platform: for low-ops teams
+  - Self-service platform: for platform-led transformation
+  - Self-service platform: for app teams and platform teams
+  - Self-service platform: for distributed engineering organizations
+  - Self-service platform: for multi-account cloud estates
+  - Self-service platform: for service ownership models
+  - Self-service platform: in regulated industries
+  - Self-service platform: during digital transformation
+  - Self-service platform: with strong change governance
+  - Self-service platform: without creating platform sprawl
+  - Self-service platform: with strong SRE collaboration
+  - Self-service platform: with mature DevOps adoption
+  - Self-service platform: for secure self-service
+  - Self-service platform: for engineering leaders
+  - Self-service platform: for enterprise architecture teams
+  - Platform capability: for high-growth engineering teams
+  - Platform capability: for enterprise software organizations
+  - Platform capability: for regulated environments
+  - Platform capability: for multi-team delivery
+  - Platform capability: without slowing developer throughput
+  - Platform capability: with secure guardrails
+  - Platform capability: for cloud-native adoption
+  - Platform capability: for hybrid infrastructure
+  - Platform capability: for platform product teams
+  - Platform capability: for legacy modernization programs
+  - Platform capability: across dev, test, and production
+  - Platform capability: for global engineering organizations
+  - Platform capability: with strong compliance requirements
+  - Platform capability: at scale
+  - Platform capability: for platform reliability goals
+  - Platform capability: for low-ops teams
+  - Platform capability: for platform-led transformation
+  - Platform capability: for app teams and platform teams
+  - Platform capability: for distributed engineering organizations
+  - Platform capability: for multi-account cloud estates
+  - Platform capability: for service ownership models
+  - Platform capability: in regulated industries
+  - Platform capability: during digital transformation
+  - Platform capability: with strong change governance
+  - Platform capability: without creating platform sprawl
+  - Platform capability: with strong SRE collaboration
+  - Platform capability: with mature DevOps adoption
+  - Platform capability: for secure self-service
+  - Platform capability: for engineering leaders
+  - Platform capability: for enterprise architecture teams
+  - Platform governance: for high-growth engineering teams
+  - Platform governance: for enterprise software organizations
+  - Platform governance: for regulated environments
+  - Platform governance: for multi-team delivery
+  - Platform governance: without slowing developer throughput
+  - Platform governance: with secure guardrails
+  - Platform governance: for cloud-native adoption
+  - Platform governance: for hybrid infrastructure
+  - Platform governance: for platform product teams
+  - Platform governance: for legacy modernization programs
+  - Platform governance: across dev, test, and production
+  - Platform governance: for global engineering organizations
+  - Platform governance: with strong compliance requirements
+  - Platform governance: at scale
+  - Platform governance: for platform reliability goals
+  - Platform governance: for low-ops teams
+  - Platform governance: for platform-led transformation
+  - Platform governance: for app teams and platform teams
+  - Platform governance: for distributed engineering organizations
+  - Platform governance: for multi-account cloud estates
+  - Platform governance: for service ownership models
+  - Platform governance: in regulated industries
+  - Platform governance: during digital transformation
+  - Platform governance: with strong change governance
+  - Platform governance: without creating platform sprawl
+  - Platform governance: with strong SRE collaboration
+  - Platform governance: with mature DevOps adoption
+  - Platform governance: for secure self-service
+  - Platform governance: for engineering leaders
+  - Platform governance: for enterprise architecture teams
+  - Developer experience: for high-growth engineering teams
+  - Developer experience: for enterprise software organizations
+  - Developer experience: for regulated environments
+  - Developer experience: for multi-team delivery
+  - Developer experience: without slowing developer throughput
+  - Developer experience: with secure guardrails
+  - Developer experience: for cloud-native adoption
+  - Developer experience: for hybrid infrastructure
+  - Developer experience: for platform product teams
+  - Developer experience: for legacy modernization programs
+  - Developer experience: across dev, test, and production
+  - Developer experience: for global engineering organizations
+  - Developer experience: with strong compliance requirements
+  - Developer experience: at scale
+  - Developer experience: for platform reliability goals
+  - Developer experience: for low-ops teams
+  - Developer experience: for platform-led transformation
+  - Developer experience: for app teams and platform teams
+  - Developer experience: for distributed engineering organizations
+  - Developer experience: for multi-account cloud estates
+  - Developer experience: for service ownership models
+  - Developer experience: in regulated industries
+  - Developer experience: during digital transformation
+  - Developer experience: with strong change governance
+  - Developer experience: without creating platform sprawl
+  - Developer experience: with strong SRE collaboration
+  - Developer experience: with mature DevOps adoption
+  - Developer experience: for secure self-service
+  - Developer experience: for engineering leaders
+  - Developer experience: for enterprise architecture teams
+  - Engineering enablement: for high-growth engineering teams
+  - Engineering enablement: for enterprise software organizations
+  - Engineering enablement: for regulated environments
+  - Engineering enablement: for multi-team delivery
+  - Engineering enablement: without slowing developer throughput
+  - Engineering enablement: with secure guardrails
+  - Engineering enablement: for cloud-native adoption
+  - Engineering enablement: for hybrid infrastructure
+  - Engineering enablement: for platform product teams
+  - Engineering enablement: for legacy modernization programs
+  - Engineering enablement: across dev, test, and production
+  - Engineering enablement: for global engineering organizations
+  - Engineering enablement: with strong compliance requirements
+  - Engineering enablement: at scale
+  - Engineering enablement: for platform reliability goals
+  - Engineering enablement: for low-ops teams
+  - Engineering enablement: for platform-led transformation
+  - Engineering enablement: for app teams and platform teams
+  - Engineering enablement: for distributed engineering organizations
+  - Engineering enablement: for multi-account cloud estates
+  - Engineering enablement: for service ownership models
+  - Engineering enablement: in regulated industries
+  - Engineering enablement: during digital transformation
+  - Engineering enablement: with strong change governance
+  - Engineering enablement: without creating platform sprawl
+  - Engineering enablement: with strong SRE collaboration
+  - Engineering enablement: with mature DevOps adoption
+  - Engineering enablement: for secure self-service
+  - Engineering enablement: for engineering leaders
+  - Engineering enablement: for enterprise architecture teams
+  - Platform product management: for high-growth engineering teams
+  - Platform product management: for enterprise software organizations
+  - Platform product management: for regulated environments
+  - Platform product management: for multi-team delivery
+  - Platform product management: without slowing developer throughput
+  - Platform product management: with secure guardrails
+  - Platform product management: for cloud-native adoption
+  - Platform product management: for hybrid infrastructure
+  - Platform product management: for platform product teams
+  - Platform product management: for legacy modernization programs
+  - Platform product management: across dev, test, and production
+  - Platform product management: for global engineering organizations
+  - Platform product management: with strong compliance requirements
+  - Platform product management: at scale
+  - Platform product management: for platform reliability goals
+  - Platform product management: for low-ops teams
+  - Platform product management: for platform-led transformation
+  - Platform product management: for app teams and platform teams
+  - Platform product management: for distributed engineering organizations
+  - Platform product management: for multi-account cloud estates
+  - Platform product management: for service ownership models
+  - Platform product management: in regulated industries
+  - Platform product management: during digital transformation
+  - Platform product management: with strong change governance
+  - Platform product management: without creating platform sprawl
+  - Platform product management: with strong SRE collaboration
+  - Platform product management: with mature DevOps adoption
+  - Platform product management: for secure self-service
+  - Platform product management: for engineering leaders
+  - Platform product management: for enterprise architecture teams

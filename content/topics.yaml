@@ -3,3 +3,77 @@ topics:
   - Kubernetes readiness vs liveness probes
   - Terraform remote state explained
   - GitHub Actions basics for DevOps
+  - Platform engineering foundations and golden paths
+  - Internal developer platforms for scaling teams
+  - Backstage adoption patterns for engineering organizations
+  - Self-service infrastructure with guardrails
+  - Developer experience metrics that actually matter
+  - Standardizing environments with platform templates
+  - GitOps for application delivery with ArgoCD
+  - FluxCD versus ArgoCD for platform teams
+  - Kubernetes service mesh fundamentals
+  - Istio versus Linkerd for production workloads
+  - Zero trust networking in cloud-native platforms
+  - mTLS and certificate rotation best practices
+  - Admission controllers and policy enforcement
+  - OPA and Kyverno for policy as code
+  - Secrets management with Vault and External Secrets
+  - CI/CD pipelines for multi-environment delivery
+  - Blue-green deployments without downtime
+  - Canary releases for safer production rollouts
+  - Rollback strategies for distributed systems
+  - Error budgets and SRE practices for teams
+  - Incident response automation for platform engineers
+  - Reliability engineering in platform operations
+  - Observability pipelines and signal quality
+  - OpenTelemetry instrumentation for microservices
+  - Metrics, logs, and traces in a unified platform
+  - Kubernetes autoscaling strategies for cost and stability
+  - Horizontal pod autoscaling patterns
+  - Vertical pod autoscaling and resource tuning
+  - Multi-cluster Kubernetes operations
+  - Kubeadm versus managed Kubernetes control planes
+  - Container security scanning in CI pipelines
+  - Dependency management and SBOM generation
+  - Supply chain security for platform teams
+  - Infrastructure as code governance and review
+  - Terraform modules for reusable platform building blocks
+  - Terragrunt patterns for multi-account setups
+  - Cloud cost optimization for Kubernetes workloads
+  - FinOps practices for engineering organizations
+  - Network policies and east-west traffic control
+  - Service discovery and API gateway patterns
+  - Load balancing strategies in Kubernetes
+  - Build cache optimization for faster pipelines
+  - Runner efficiency and self-hosted GitHub Actions
+  - Artifact provenance and signed releases
+  - Disaster recovery testing for cloud workloads
+  - Database platform engineering for application teams
+  - Kubernetes storage classes and persistent workloads
+  - Stateful workloads on Kubernetes without pain
+  - Platform readiness reviews for production changes
+  - Change management for high-velocity teams
+  - Production readiness checklists for platform teams
+  - Post-incident reviews and learning loops
+  - Progressive delivery patterns for platform adoption
+  - Secure CI runners and ephemeral build environments
+  - GitHub Actions security best practices
+  - Terraform state management at scale
+  - Drift detection and remediation in cloud infrastructure
+  - Platform ownership models and team boundaries
+  - Cloud landing zones for secure platform foundations
+  - Shared responsibility models in DevOps teams
+  - Observability-driven development in platform engineering
+  - Platform engineering operating models and maturity
+  - Developer portals and self-service enablement
+  - On-call readiness and flattening operational load
+  - API contract testing in distributed platforms
+  - Runbooks and operational playbooks for teams
+  - Chaos engineering for platform reliability
+  - Resilience testing without taking down production
+  - Container runtime security fundamentals
+  - Kubernetes security hardening checklists
+  - Vendor-neutral platform design principles
+  - Cloud-native architecture patterns for teams
+  - Multi-cloud strategy and portability concerns
+  - Platform debt and technical debt reduction strategies
