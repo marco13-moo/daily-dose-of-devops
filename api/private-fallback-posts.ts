@@ -154,11 +154,11 @@ Use lockfiles and deterministic installation commands. Separate build from deplo
 `,
 };
 
-const DEFAULT_POST = POSTS["What is CI/CD and why it matters"];
-
 export function getFallbackPost(topic: string): string {
-  return POSTS[topic] ?? DEFAULT_POST.replace(
-    "# CI/CD as a Control System: From Commit Entropy to Production Evidence",
-    `# ${topic}: A Systems Perspective`,
-  );
+  const post = POSTS[topic];
+  if (!post) {
+    throw new Error(`No topic-specific fallback post exists for: ${topic}`);
+  }
+
+  return post;
 }

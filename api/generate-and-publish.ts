@@ -139,7 +139,11 @@ export async function generateAndPublish(
   } catch (error) {
     fallback = true;
     fallbackReason = (error as Error).message;
-    markdown = getFallbackPost(topic);
+    try {
+      markdown = getFallbackPost(topic);
+    } catch {
+      throw new Error(`Generation unavailable and no unique fallback exists for "${topic}": ${fallbackReason}`);
+    }
     console.warn(`Generation unavailable; using private fallback post: ${fallbackReason}`);
   }
 
@@ -176,8 +180,13 @@ async function main(): Promise<void> {
     markdown = await generateBlog(topic);
   } catch (error) {
     fallback = true;
-    markdown = getFallbackPost(topic);
-    console.warn("Generation unavailable; storing private fallback:", (error as Error).message);
+    const fallbackReason = (error as Error).message;
+    try {
+      markdown = getFallbackPost(topic);
+    } catch {
+      throw new Error(`Generation unavailable and no unique fallback exists for "${topic}": ${fallbackReason}`);
+    }
+    console.warn("Generation unavailable; storing private fallback:", fallbackReason);
   }
 
   const localPost = await saveLocalPost(topic, markdown);

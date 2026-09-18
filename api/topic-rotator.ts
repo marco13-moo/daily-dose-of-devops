@@ -10,6 +10,8 @@ type TopicEntry = { category: string; topic: string };
 type PublishedEntry = string | { topic: string; category?: string };
 
 const DEFAULT_CATEGORY_ROTATION = ["platform-engineering", "kubernetes", "security", "observability"];
+const TOPIC_STRIDE = 31;
+const DAY_IN_MILLISECONDS = 86_400_000;
 
 function normalizeCategoryName(value: string): string {
   return value
@@ -31,15 +33,8 @@ function getSortedCategoryNames(): string[] {
     .concat(unique.filter((category) => !DEFAULT_CATEGORY_ROTATION.includes(category)));
 }
 
-function getIsoWeek(date: Date): number {
-  const januaryFirst = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-  const current = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
-  const dayOfWeek = (current.getUTCDay() + 6) % 7;
-  const weekStart = new Date(current);
-  weekStart.setUTCDate(current.getUTCDate() - dayOfWeek);
-
-  const diff = Math.round((weekStart.getTime() - januaryFirst.getTime()) / 86400000 / 7);
-  return 1 + diff;
+function getUtcDayOrdinal(date: Date): number {
+  return Math.floor(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()) / DAY_IN_MILLISECONDS);
 }
 
 function readPublishedEntries(): PublishedEntry[] {
@@ -60,7 +55,10 @@ function readPublishedEntries(): PublishedEntry[] {
 }
 
 function topicKey(topic: string, category?: string): string {
-  return `${normalizeCategoryName(category ?? "legacy")}::${topic}`;
+  // Titles are globally unique. Category-independent keys also protect against a
+  // future catalogue reorganisation accidentally republishing an old article.
+  void category;
+  return topic.trim().toLocaleLowerCase("en-US");
 }
 
 function normalizeTopicEntry(entry: unknown): string | null {
@@ -87,7 +85,7 @@ function normalizeTopicEntry(entry: unknown): string | null {
   return null;
 }
 
-function getTopicCatalog(): TopicEntry[] {
+export function getTopicCatalog(): TopicEntry[] {
   if (fs.existsSync(TOPICS_DIR)) {
     const files = fs.readdirSync(TOPICS_DIR)
       .filter((file) => (file.endsWith(".yaml") || file.endsWith(".yml")))
@@ -142,17 +140,16 @@ export function getCurrentCategory(date = new Date()): string {
     return "legacy";
   }
 
-  const isoWeek = getIsoWeek(date);
-  return categories[(Math.max(isoWeek, 1) - 1) % categories.length];
+  return categories[getUtcDayOrdinal(date) % categories.length];
 }
 
-export function getNextTopic(category?: string): string {
+export function getNextTopic(category?: string, date = new Date()): string {
   const catalog = getTopicCatalog();
   if (catalog.length === 0) {
     throw new Error("No topics available. Add content to content/topics/*.yaml or content/topics.yaml.");
   }
 
-  const normalizedCategory = category ? normalizeCategoryName(category) : getCurrentCategory();
+  const normalizedCategory = category ? normalizeCategoryName(category) : getCurrentCategory(date);
   const filteredCatalog = catalog.filter((entry) => entry.category === normalizedCategory);
 
   if (filteredCatalog.length === 0) {
@@ -160,17 +157,34 @@ export function getNextTopic(category?: string): string {
   }
 
   const publishedSet = getPublishedSet();
-  const remaining = filteredCatalog.filter((entry) => !publishedSet.has(topicKey(entry.topic, entry.category)));
+  const remaining = new Set(
+    filteredCatalog
+      .filter((entry) => !publishedSet.has(topicKey(entry.topic, entry.category)))
+      .map((entry) => topicKey(entry.topic, entry.category)),
+  );
 
-  if (remaining.length === 0) {
+  if (remaining.size === 0) {
     throw new Error(`No unpublished topics remain in ${normalizedCategory}. Add more topics or intentionally reset content/published.json.`);
   }
 
-  return remaining[0].topic;
+  // A stride coprime to each 300-entry category traverses every topic exactly
+  // once while jumping between subject families instead of draining thirty
+  // near-neighbour variants consecutively. The publication ledger remains the
+  // final authority, so retries and manual runs cannot duplicate a title.
+  const categoryRun = Math.floor(getUtcDayOrdinal(date) / Math.max(getSortedCategoryNames().length, 1));
+  const start = (categoryRun * TOPIC_STRIDE) % filteredCatalog.length;
+  for (let offset = 0; offset < filteredCatalog.length; offset += 1) {
+    const candidate = filteredCatalog[(start + offset * TOPIC_STRIDE) % filteredCatalog.length];
+    if (remaining.has(topicKey(candidate.topic, candidate.category))) {
+      return candidate.topic;
+    }
+  }
+
+  throw new Error(`Unable to select an unpublished topic in ${normalizedCategory}.`);
 }
 
-export function getNextTopicForNow(): string {
-  return getNextTopic(process.env.TOPIC_CATEGORY ?? getCurrentCategory());
+export function getNextTopicForNow(date = new Date()): string {
+  return getNextTopic(process.env.TOPIC_CATEGORY ?? getCurrentCategory(date), date);
 }
 
 export function markTopicPublished(topic: string, category?: string): void {
@@ -182,10 +196,10 @@ export function markTopicPublished(topic: string, category?: string): void {
   const published = readPublishedEntries();
   const nextEntries = published.filter((entry) => {
     if (typeof entry === "string") {
-      return entry !== topic;
+      return topicKey(entry) !== topicKey(topic);
     }
 
-    return !(entry.topic === topic && normalizeCategoryName(entry.category ?? "legacy") === inferredCategory);
+    return topicKey(entry.topic, entry.category) !== topicKey(topic, inferredCategory);
   });
 
   nextEntries.push({ topic, category: inferredCategory });

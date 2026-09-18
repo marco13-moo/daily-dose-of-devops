@@ -49,8 +49,11 @@ daily-dose-of-devops/
    - Posts automatically to your **DEV Community profile**.
 
 3. **Topic Rotation & Deduplication**
-   - Pulls from a rotating list of topics in `topics.yaml`.
-   - Prevents duplicate posts by tracking published topics in `published.json`.
+   - Preloads 1,200 distinct DevOps article briefs across platform engineering, Kubernetes, security, and observability.
+   - Rotates categories daily and traverses each category with a coprime stride so adjacent posts do not exhaust one subject family.
+   - Prevents duplicate titles globally by tracking published topics in `published.json`.
+   - Fails validation if the catalogue falls below 1,000 unique topics.
+   - Refuses to publish when generation fails unless a genuinely topic-specific fallback exists.
 
 4. **CI/CD & DevOps Excellence**
    - Fully typed TypeScript code.
@@ -82,7 +85,7 @@ npm run build
 
 ## 📝 How it Works
 
-1. **Pick a category** for the current week (platform engineering, Kubernetes, security, or observability).
+1. **Pick a category** for the current UTC day (platform engineering, Kubernetes, security, or observability).
 2. **Pick a topic** from the matching YAML file that hasn’t been published yet.
 3. **Generate content** via Hugging Face LLM.
 4. **Publish post** to DEV Community.
@@ -125,6 +128,7 @@ The migration reads the 20 complete articles still exposed by the public Hashnod
 
 ```bash
 npm run build
+npm test
 
 # Safe preview: creates DEV drafts
 DEV_API_KEY=<your_key> npm run migrate:hashnode
