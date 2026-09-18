@@ -53,7 +53,7 @@ daily-dose-of-devops/
    - Rotates categories daily and traverses each category with a coprime stride so adjacent posts do not exhaust one subject family.
    - Prevents duplicate titles globally by tracking published topics in `published.json`.
    - Fails validation if the catalogue falls below 1,000 unique topics.
-   - Refuses to publish when generation fails unless a genuinely topic-specific fallback exists.
+   - Falls back to the corresponding pre-generated Markdown article in the unobtrusive `content/.fallback-posts/` corpus when model generation is unavailable.
 
 4. **CI/CD & DevOps Excellence**
    - Fully typed TypeScript code.

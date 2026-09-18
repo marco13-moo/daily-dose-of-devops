@@ -140,7 +140,7 @@ export async function generateAndPublish(
     fallback = true;
     fallbackReason = (error as Error).message;
     try {
-      markdown = getFallbackPost(topic);
+      markdown = getFallbackPost(topic, category);
     } catch {
       throw new Error(`Generation unavailable and no unique fallback exists for "${topic}": ${fallbackReason}`);
     }
@@ -182,7 +182,7 @@ async function main(): Promise<void> {
     fallback = true;
     const fallbackReason = (error as Error).message;
     try {
-      markdown = getFallbackPost(topic);
+      markdown = getFallbackPost(topic, category);
     } catch {
       throw new Error(`Generation unavailable and no unique fallback exists for "${topic}": ${fallbackReason}`);
     }

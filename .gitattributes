@@ -1,0 +1,3 @@
+# Keep the generated emergency corpus reviewable without allowing 1,200
+# deterministic Markdown files to dominate GitHub language and diff statistics.
+content/.fallback-posts/** linguist-generated=true

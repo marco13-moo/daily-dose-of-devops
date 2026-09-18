@@ -2,6 +2,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc --pretty false",
+    "generate:fallbacks": "npm run build && node dist/scripts/generate-fallback-posts.js",
     "validate:topics": "npm run build && node dist/scripts/validate-topic-catalog.js",
     "test": "npm run validate:topics",
     "daily": "node dist/api/generate-and-publish.js",

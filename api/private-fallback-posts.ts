@@ -1,3 +1,15 @@
+import fs from "node:fs";
+import path from "node:path";
+
+const FALLBACK_ROOT = path.join("content", ".fallback-posts");
+
+function slugifyTopic(topic: string): string {
+  return topic
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 const POSTS: Record<string, string> = {
   "What is CI/CD and why it matters": `# CI/CD as a Control System: From Commit Entropy to Production Evidence
 
@@ -154,11 +166,26 @@ Use lockfiles and deterministic installation commands. Separate build from deplo
 `,
 };
 
-export function getFallbackPost(topic: string): string {
+export function getFallbackPost(topic: string, category?: string): string {
   const post = POSTS[topic];
-  if (!post) {
-    throw new Error(`No topic-specific fallback post exists for: ${topic}`);
+  if (post) {
+    return post;
   }
 
-  return post;
+  const filename = `${slugifyTopic(topic)}.md`;
+  const candidatePaths = category
+    ? [path.join(FALLBACK_ROOT, category, filename)]
+    : fs.existsSync(FALLBACK_ROOT)
+      ? fs.readdirSync(FALLBACK_ROOT, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => path.join(FALLBACK_ROOT, entry.name, filename))
+      : [];
+
+  for (const candidatePath of candidatePaths) {
+    if (fs.existsSync(candidatePath)) {
+      return fs.readFileSync(candidatePath, "utf8").trim();
+    }
+  }
+
+  throw new Error(`No topic-specific fallback post exists for: ${topic}`);
 }
