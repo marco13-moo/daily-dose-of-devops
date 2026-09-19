@@ -3,6 +3,10 @@
     "What is CI/CD and why it matters",
     "Kubernetes readiness vs liveness probes",
     "Terraform remote state explained",
-    "GitHub Actions basics for DevOps"
+    "GitHub Actions basics for DevOps",
+    {
+      "topic": "Observability strategy: for platform reliability reviews",
+      "category": "observability"
+    }
   ]
 }
