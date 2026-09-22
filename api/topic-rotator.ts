@@ -143,6 +143,26 @@ export function getCurrentCategory(date = new Date()): string {
   return categories[getUtcDayOrdinal(date) % categories.length];
 }
 
+function getCategoryTraversal(category: string, date: Date): TopicEntry[] {
+  const filteredCatalog = getTopicCatalog().filter((entry) => entry.category === category);
+  if (filteredCatalog.length === 0) {
+    throw new Error(`No topics remain in category: ${category}`);
+  }
+
+  const categoryRun = Math.floor(getUtcDayOrdinal(date) / Math.max(getSortedCategoryNames().length, 1));
+  const start = (categoryRun * TOPIC_STRIDE) % filteredCatalog.length;
+  return filteredCatalog.map((_, offset) =>
+    filteredCatalog[(start + offset * TOPIC_STRIDE) % filteredCatalog.length]);
+}
+
+// The pure schedule is intentionally independent of publication state. CI uses
+// this function to prove the 1,200-day permutation without allowing an already
+// published title to perturb the invariant being tested.
+export function getScheduledTopic(category?: string, date = new Date()): string {
+  const normalizedCategory = category ? normalizeCategoryName(category) : getCurrentCategory(date);
+  return getCategoryTraversal(normalizedCategory, date)[0].topic;
+}
+
 export function getNextTopic(category?: string, date = new Date()): string {
   const catalog = getTopicCatalog();
   if (catalog.length === 0) {
@@ -150,15 +170,11 @@ export function getNextTopic(category?: string, date = new Date()): string {
   }
 
   const normalizedCategory = category ? normalizeCategoryName(category) : getCurrentCategory(date);
-  const filteredCatalog = catalog.filter((entry) => entry.category === normalizedCategory);
-
-  if (filteredCatalog.length === 0) {
-    throw new Error(`No topics remain in category: ${normalizedCategory}`);
-  }
+  const traversal = getCategoryTraversal(normalizedCategory, date);
 
   const publishedSet = getPublishedSet();
   const remaining = new Set(
-    filteredCatalog
+    traversal
       .filter((entry) => !publishedSet.has(topicKey(entry.topic, entry.category)))
       .map((entry) => topicKey(entry.topic, entry.category)),
   );
@@ -171,10 +187,7 @@ export function getNextTopic(category?: string, date = new Date()): string {
   // once while jumping between subject families instead of draining thirty
   // near-neighbour variants consecutively. The publication ledger remains the
   // final authority, so retries and manual runs cannot duplicate a title.
-  const categoryRun = Math.floor(getUtcDayOrdinal(date) / Math.max(getSortedCategoryNames().length, 1));
-  const start = (categoryRun * TOPIC_STRIDE) % filteredCatalog.length;
-  for (let offset = 0; offset < filteredCatalog.length; offset += 1) {
-    const candidate = filteredCatalog[(start + offset * TOPIC_STRIDE) % filteredCatalog.length];
+  for (const candidate of traversal) {
     if (remaining.has(topicKey(candidate.topic, candidate.category))) {
       return candidate.topic;
     }

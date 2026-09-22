@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { getCurrentCategory, getNextTopic, getTopicCatalog } from "../api/topic-rotator.js";
+import { getCurrentCategory, getScheduledTopic, getTopicCatalog } from "../api/topic-rotator.js";
 
 const MINIMUM_CATALOG_SIZE = 1_000;
 const FALLBACK_ROOT = path.join("content", ".fallback-posts");
@@ -68,7 +68,7 @@ const scheduledTitles = new Set<string>();
 const epochStart = Date.UTC(2026, 0, 1);
 for (let day = 0; day < catalog.length; day += 1) {
   const date = new Date(epochStart + day * 86_400_000);
-  const topic = getNextTopic(getCurrentCategory(date), date).trim().toLocaleLowerCase("en-US");
+  const topic = getScheduledTopic(getCurrentCategory(date), date).trim().toLocaleLowerCase("en-US");
   if (scheduledTitles.has(topic)) {
     throw new Error(`Daily rotation repeats a topic before catalogue exhaustion: ${topic}`);
   }
