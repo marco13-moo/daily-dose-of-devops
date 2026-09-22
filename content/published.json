@@ -7,6 +7,10 @@
     {
       "topic": "Observability strategy: for platform reliability reviews",
       "category": "observability"
+    },
+    {
+      "topic": "Workload identity: for identity-driven access",
+      "category": "security"
     }
   ]
 }
