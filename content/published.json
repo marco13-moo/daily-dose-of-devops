@@ -11,6 +11,10 @@
     {
       "topic": "Workload identity: for identity-driven access",
       "category": "security"
+    },
+    {
+      "topic": "Telemetry design: during migration programs",
+      "category": "observability"
     }
   ]
 }
