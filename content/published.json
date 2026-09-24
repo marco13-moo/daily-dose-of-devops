@@ -15,6 +15,10 @@
     {
       "topic": "Telemetry design: during migration programs",
       "category": "observability"
+    },
+    {
+      "topic": "Golden path: for service ownership models",
+      "category": "platform-engineering"
     }
   ]
 }
