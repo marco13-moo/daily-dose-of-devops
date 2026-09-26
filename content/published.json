@@ -23,6 +23,10 @@
     {
       "topic": "Kubernetes scheduling: with multi-tenant isolation",
       "category": "kubernetes"
+    },
+    {
+      "topic": "Policy as code: for Kubernetes platforms",
+      "category": "security"
     }
   ]
 }
