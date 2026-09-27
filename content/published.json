@@ -27,6 +27,10 @@
     {
       "topic": "Policy as code: for Kubernetes platforms",
       "category": "security"
+    },
+    {
+      "topic": "OpenTelemetry: for infrastructure and application teams",
+      "category": "observability"
     }
   ]
 }
