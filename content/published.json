@@ -31,6 +31,10 @@
     {
       "topic": "OpenTelemetry: for infrastructure and application teams",
       "category": "observability"
+    },
+    {
+      "topic": "Developer portal: in regulated industries",
+      "category": "platform-engineering"
     }
   ]
 }
