@@ -35,6 +35,10 @@
     {
       "topic": "Developer portal: in regulated industries",
       "category": "platform-engineering"
+    },
+    {
+      "topic": "Kubernetes autoscaling: during cluster upgrades",
+      "category": "kubernetes"
     }
   ]
 }
