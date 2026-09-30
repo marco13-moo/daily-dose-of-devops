@@ -39,6 +39,10 @@
     {
       "topic": "Kubernetes autoscaling: during cluster upgrades",
       "category": "kubernetes"
+    },
+    {
+      "topic": "Secrets management: for cloud-native infrastructure",
+      "category": "security"
     }
   ]
 }
