@@ -43,6 +43,10 @@
     {
       "topic": "Secrets management: for cloud-native infrastructure",
       "category": "security"
+    },
+    {
+      "topic": "Metrics management: with strong operational accountability",
+      "category": "observability"
     }
   ]
 }
