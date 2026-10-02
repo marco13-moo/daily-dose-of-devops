@@ -47,6 +47,10 @@
     {
       "topic": "Metrics management: with strong operational accountability",
       "category": "observability"
+    },
+    {
+      "topic": "Self-service platform: during digital transformation",
+      "category": "platform-engineering"
     }
   ]
 }
