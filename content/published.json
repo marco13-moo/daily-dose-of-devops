@@ -51,6 +51,10 @@
     {
       "topic": "Self-service platform: during digital transformation",
       "category": "platform-engineering"
+    },
+    {
+      "topic": "Kubernetes security: for platform reliability engineering",
+      "category": "kubernetes"
     }
   ]
 }
