@@ -55,6 +55,10 @@
     {
       "topic": "Kubernetes security: for platform reliability engineering",
       "category": "kubernetes"
+    },
+    {
+      "topic": "Zero trust: for application delivery pipelines",
+      "category": "security"
     }
   ]
 }
