@@ -59,6 +59,10 @@
     {
       "topic": "Zero trust: for application delivery pipelines",
       "category": "security"
+    },
+    {
+      "topic": "Trace analysis: for business-critical systems",
+      "category": "observability"
     }
   ]
 }
