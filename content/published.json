@@ -67,6 +67,10 @@
     {
       "topic": "Platform capability: with strong change governance",
       "category": "platform-engineering"
+    },
+    {
+      "topic": "Cluster lifecycle: for cost-conscious clusters",
+      "category": "kubernetes"
     }
   ]
 }
