@@ -71,6 +71,10 @@
     {
       "topic": "Cluster lifecycle: for cost-conscious clusters",
       "category": "kubernetes"
+    },
+    {
+      "topic": "Zero trust: for security reviews",
+      "category": "security"
     }
   ]
 }
