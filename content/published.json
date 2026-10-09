@@ -75,6 +75,10 @@
     {
       "topic": "Zero trust: for security reviews",
       "category": "security"
+    },
+    {
+      "topic": "Log pipeline: for platform adoption programs",
+      "category": "observability"
     }
   ]
 }
