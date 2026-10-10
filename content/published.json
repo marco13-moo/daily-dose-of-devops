@@ -79,6 +79,10 @@
     {
       "topic": "Log pipeline: for platform adoption programs",
       "category": "observability"
+    },
+    {
+      "topic": "Platform governance: without creating platform sprawl",
+      "category": "platform-engineering"
     }
   ]
 }
