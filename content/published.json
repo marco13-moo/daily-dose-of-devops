@@ -87,6 +87,10 @@
     {
       "topic": "Kubernetes storage: for application teams",
       "category": "kubernetes"
+    },
+    {
+      "topic": "Supply chain security: for application security leaders",
+      "category": "security"
     }
   ]
 }
