@@ -95,6 +95,10 @@
     {
       "topic": "SLO design: for high-change environments",
       "category": "observability"
+    },
+    {
+      "topic": "Developer experience: with strong SRE collaboration",
+      "category": "platform-engineering"
     }
   ]
 }
