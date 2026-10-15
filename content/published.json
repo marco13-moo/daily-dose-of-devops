@@ -99,6 +99,10 @@
     {
       "topic": "Developer experience: with strong SRE collaboration",
       "category": "platform-engineering"
+    },
+    {
+      "topic": "Kubernetes observability: for regulated workloads",
+      "category": "kubernetes"
     }
   ]
 }
