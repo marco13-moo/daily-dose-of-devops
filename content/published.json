@@ -103,6 +103,10 @@
     {
       "topic": "Kubernetes observability: for regulated workloads",
       "category": "kubernetes"
+    },
+    {
+      "topic": "Container security: with least privilege by default",
+      "category": "security"
     }
   ]
 }
