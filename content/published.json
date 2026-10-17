@@ -107,6 +107,10 @@
     {
       "topic": "Container security: with least privilege by default",
       "category": "security"
+    },
+    {
+      "topic": "SLI definition: without alert fatigue",
+      "category": "observability"
     }
   ]
 }
