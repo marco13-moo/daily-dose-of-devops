@@ -111,6 +111,10 @@
     {
       "topic": "SLI definition: without alert fatigue",
       "category": "observability"
+    },
+    {
+      "topic": "Engineering enablement: with mature DevOps adoption",
+      "category": "platform-engineering"
     }
   ]
 }
