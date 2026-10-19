@@ -115,6 +115,10 @@
     {
       "topic": "Engineering enablement: with mature DevOps adoption",
       "category": "platform-engineering"
+    },
+    {
+      "topic": "Multi-cluster Kubernetes: for large-scale clusters",
+      "category": "kubernetes"
     }
   ]
 }
