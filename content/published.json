@@ -119,6 +119,10 @@
     {
       "topic": "Multi-cluster Kubernetes: for large-scale clusters",
       "category": "kubernetes"
+    },
+    {
+      "topic": "Artifact provenance: for distribution of platform responsibilities",
+      "category": "security"
     }
   ]
 }
