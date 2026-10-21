@@ -123,6 +123,10 @@
     {
       "topic": "Artifact provenance: for distribution of platform responsibilities",
       "category": "security"
+    },
+    {
+      "topic": "Error budget: for incident response programs",
+      "category": "observability"
     }
   ]
 }
