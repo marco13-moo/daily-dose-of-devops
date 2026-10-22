@@ -127,6 +127,10 @@
     {
       "topic": "Error budget: for incident response programs",
       "category": "observability"
+    },
+    {
+      "topic": "Platform product management: for secure self-service",
+      "category": "platform-engineering"
     }
   ]
 }
