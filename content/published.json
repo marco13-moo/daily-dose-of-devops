@@ -131,6 +131,10 @@
     {
       "topic": "Platform product management: for secure self-service",
       "category": "platform-engineering"
+    },
+    {
+      "topic": "Namespace design: for production workloads",
+      "category": "kubernetes"
     }
   ]
 }
