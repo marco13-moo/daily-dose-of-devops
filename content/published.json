@@ -135,6 +135,10 @@
     {
       "topic": "Namespace design: for production workloads",
       "category": "kubernetes"
+    },
+    {
+      "topic": "SBOM generation: for modern cloud workloads",
+      "category": "security"
     }
   ]
 }
