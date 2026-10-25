@@ -139,6 +139,10 @@
     {
       "topic": "SBOM generation: for modern cloud workloads",
       "category": "security"
+    },
+    {
+      "topic": "Alert management: for GitOps operations",
+      "category": "observability"
     }
   ]
 }
