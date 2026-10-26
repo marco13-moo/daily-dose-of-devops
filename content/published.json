@@ -143,6 +143,10 @@
     {
       "topic": "Alert management: for GitOps operations",
       "category": "observability"
+    },
+    {
+      "topic": "Platform engineering: for engineering leaders",
+      "category": "platform-engineering"
     }
   ]
 }
