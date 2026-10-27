@@ -147,6 +147,10 @@
     {
       "topic": "Platform engineering: for engineering leaders",
       "category": "platform-engineering"
+    },
+    {
+      "topic": "Kubernetes architecture: for secure developer workloads",
+      "category": "kubernetes"
     }
   ]
 }
