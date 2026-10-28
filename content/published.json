@@ -151,6 +151,10 @@
     {
       "topic": "Kubernetes architecture: for secure developer workloads",
       "category": "kubernetes"
+    },
+    {
+      "topic": "Identity and access: for compliance-heavy teams",
+      "category": "security"
     }
   ]
 }
