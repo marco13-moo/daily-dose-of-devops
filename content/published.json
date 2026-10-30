@@ -159,6 +159,10 @@
     {
       "topic": "Observability strategy: for engineering leadership",
       "category": "observability"
+    },
+    {
+      "topic": "Internal developer platform: for enterprise architecture teams",
+      "category": "platform-engineering"
     }
   ]
 }
