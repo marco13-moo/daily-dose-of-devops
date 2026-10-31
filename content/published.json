@@ -163,6 +163,10 @@
     {
       "topic": "Internal developer platform: for enterprise architecture teams",
       "category": "platform-engineering"
+    },
+    {
+      "topic": "Kubernetes networking: for resilient workloads",
+      "category": "kubernetes"
     }
   ]
 }
