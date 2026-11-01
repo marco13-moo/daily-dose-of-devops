@@ -167,6 +167,10 @@
     {
       "topic": "Kubernetes networking: for resilient workloads",
       "category": "kubernetes"
+    },
+    {
+      "topic": "Workload identity: with federated identity",
+      "category": "security"
     }
   ]
 }
