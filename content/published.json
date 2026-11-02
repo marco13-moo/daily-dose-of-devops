@@ -171,6 +171,10 @@
     {
       "topic": "Workload identity: with federated identity",
       "category": "security"
+    },
+    {
+      "topic": "Telemetry design: for platform operations teams",
+      "category": "observability"
     }
   ]
 }
