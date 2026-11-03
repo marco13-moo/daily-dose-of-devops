@@ -175,6 +175,10 @@
     {
       "topic": "Telemetry design: for platform operations teams",
       "category": "observability"
+    },
+    {
+      "topic": "Developer portal: for high-growth engineering teams",
+      "category": "platform-engineering"
     }
   ]
 }
