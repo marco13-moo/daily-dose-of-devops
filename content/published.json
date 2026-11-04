@@ -179,6 +179,10 @@
     {
       "topic": "Developer portal: for high-growth engineering teams",
       "category": "platform-engineering"
+    },
+    {
+      "topic": "Kubernetes scheduling: for observability-driven operations",
+      "category": "kubernetes"
     }
   ]
 }
