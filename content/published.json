@@ -183,6 +183,10 @@
     {
       "topic": "Kubernetes scheduling: for observability-driven operations",
       "category": "kubernetes"
+    },
+    {
+      "topic": "Policy as code: for secure automation",
+      "category": "security"
     }
   ]
 }
