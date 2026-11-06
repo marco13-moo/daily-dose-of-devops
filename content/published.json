@@ -187,6 +187,10 @@
     {
       "topic": "Policy as code: for secure automation",
       "category": "security"
+    },
+    {
+      "topic": "OpenTelemetry: without excessive logging overhead",
+      "category": "observability"
     }
   ]
 }
