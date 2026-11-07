@@ -191,6 +191,10 @@
     {
       "topic": "OpenTelemetry: without excessive logging overhead",
       "category": "observability"
+    },
+    {
+      "topic": "Self-service platform: for enterprise software organizations",
+      "category": "platform-engineering"
     }
   ]
 }
