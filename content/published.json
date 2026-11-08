@@ -195,6 +195,10 @@
     {
       "topic": "Self-service platform: for enterprise software organizations",
       "category": "platform-engineering"
+    },
+    {
+      "topic": "Kubernetes autoscaling: across multi-region clusters",
+      "category": "kubernetes"
     }
   ]
 }
