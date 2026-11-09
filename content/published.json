@@ -199,6 +199,10 @@
     {
       "topic": "Kubernetes autoscaling: across multi-region clusters",
       "category": "kubernetes"
+    },
+    {
+      "topic": "Secrets management: with low operational overhead",
+      "category": "security"
     }
   ]
 }
