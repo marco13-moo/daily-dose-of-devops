@@ -203,6 +203,10 @@
     {
       "topic": "Secrets management: with low operational overhead",
       "category": "security"
+    },
+    {
+      "topic": "Metrics management: for cost-conscious observability",
+      "category": "observability"
     }
   ]
 }
