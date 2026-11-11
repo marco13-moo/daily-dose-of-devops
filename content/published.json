@@ -207,6 +207,10 @@
     {
       "topic": "Metrics management: for cost-conscious observability",
       "category": "observability"
+    },
+    {
+      "topic": "Platform capability: for regulated environments",
+      "category": "platform-engineering"
     }
   ]
 }
