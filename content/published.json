@@ -211,6 +211,10 @@
     {
       "topic": "Platform capability: for regulated environments",
       "category": "platform-engineering"
+    },
+    {
+      "topic": "Kubernetes security: without operational drift",
+      "category": "kubernetes"
     }
   ]
 }
