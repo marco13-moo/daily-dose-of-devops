@@ -215,6 +215,10 @@
     {
       "topic": "Kubernetes security: without operational drift",
       "category": "kubernetes"
+    },
+    {
+      "topic": "Zero trust: for secure self-service",
+      "category": "security"
     }
   ]
 }
