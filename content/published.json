@@ -219,6 +219,10 @@
     {
       "topic": "Zero trust: for secure self-service",
       "category": "security"
+    },
+    {
+      "topic": "Trace analysis: for long-lived systems",
+      "category": "observability"
     }
   ]
 }
