@@ -223,6 +223,10 @@
     {
       "topic": "Trace analysis: for long-lived systems",
       "category": "observability"
+    },
+    {
+      "topic": "Platform governance: for multi-team delivery",
+      "category": "platform-engineering"
     }
   ]
 }
