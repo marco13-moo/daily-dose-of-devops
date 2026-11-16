@@ -227,6 +227,10 @@
     {
       "topic": "Platform governance: for multi-team delivery",
       "category": "platform-engineering"
+    },
+    {
+      "topic": "Cluster lifecycle: for edge and on-prem clusters",
+      "category": "kubernetes"
     }
   ]
 }
