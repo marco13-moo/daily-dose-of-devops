@@ -231,6 +231,10 @@
     {
       "topic": "Cluster lifecycle: for edge and on-prem clusters",
       "category": "kubernetes"
+    },
+    {
+      "topic": "Supply chain security: for distributed engineering organizations",
+      "category": "security"
     }
   ]
 }
