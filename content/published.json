@@ -235,6 +235,10 @@
     {
       "topic": "Supply chain security: for distributed engineering organizations",
       "category": "security"
+    },
+    {
+      "topic": "Log pipeline: across multiple cloud platforms",
+      "category": "observability"
     }
   ]
 }
