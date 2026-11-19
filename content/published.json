@@ -239,6 +239,10 @@
     {
       "topic": "Log pipeline: across multiple cloud platforms",
       "category": "observability"
+    },
+    {
+      "topic": "Developer experience: without slowing developer throughput",
+      "category": "platform-engineering"
     }
   ]
 }
