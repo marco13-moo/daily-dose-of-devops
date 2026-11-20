@@ -243,6 +243,10 @@
     {
       "topic": "Developer experience: without slowing developer throughput",
       "category": "platform-engineering"
+    },
+    {
+      "topic": "Kubernetes storage: with strong policy enforcement",
+      "category": "kubernetes"
     }
   ]
 }
