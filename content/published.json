@@ -247,6 +247,10 @@
     {
       "topic": "Kubernetes storage: with strong policy enforcement",
       "category": "kubernetes"
+    },
+    {
+      "topic": "Container security: for production systems",
+      "category": "security"
     }
   ]
 }
