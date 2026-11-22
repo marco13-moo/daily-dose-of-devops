@@ -251,6 +251,10 @@
     {
       "topic": "Container security: for production systems",
       "category": "security"
+    },
+    {
+      "topic": "SLO design: during release validation",
+      "category": "observability"
     }
   ]
 }
