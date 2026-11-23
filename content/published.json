@@ -255,6 +255,10 @@
     {
       "topic": "SLO design: during release validation",
       "category": "observability"
+    },
+    {
+      "topic": "Engineering enablement: with secure guardrails",
+      "category": "platform-engineering"
     }
   ]
 }
