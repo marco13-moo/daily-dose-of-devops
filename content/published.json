@@ -259,6 +259,10 @@
     {
       "topic": "Engineering enablement: with secure guardrails",
       "category": "platform-engineering"
+    },
+    {
+      "topic": "Kubernetes observability: with multi-tenant isolation",
+      "category": "kubernetes"
     }
   ]
 }
