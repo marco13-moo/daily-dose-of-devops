@@ -263,6 +263,10 @@
     {
       "topic": "Kubernetes observability: with multi-tenant isolation",
       "category": "kubernetes"
+    },
+    {
+      "topic": "Artifact provenance: for enterprise platform teams",
+      "category": "security"
     }
   ]
 }
