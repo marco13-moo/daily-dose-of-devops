@@ -267,6 +267,10 @@
     {
       "topic": "Artifact provenance: for enterprise platform teams",
       "category": "security"
+    },
+    {
+      "topic": "SLI definition: for real-time system visibility",
+      "category": "observability"
     }
   ]
 }
