@@ -275,6 +275,10 @@
     {
       "topic": "Platform product management: for cloud-native adoption",
       "category": "platform-engineering"
+    },
+    {
+      "topic": "Multi-cluster Kubernetes: during cluster upgrades",
+      "category": "kubernetes"
     }
   ]
 }
